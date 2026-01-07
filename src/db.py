@@ -3,10 +3,10 @@ def get_all_titres():
     conn = get_connection()
     cur = conn.cursor()
     cur.execute('''
-        SELECT T.id, T.valeur, T.type, T.genre, T.cultureId, CU.name, T.categorieId, CA.name, T.createdAt, T.updatedAt
+        SELECT T.id, T.valeur, T.type, T.genre, T."cultureId", CU.name, T."categorieId", CA.name, T."createdAt", T."updatedAt"
         FROM "Titre" T
-        LEFT JOIN "Culture" CU ON T.cultureId = CU.id
-        LEFT JOIN "Categorie" CA ON T.categorieId = CA.id
+        LEFT JOIN "Culture" CU ON T."cultureId" = CU.id
+        LEFT JOIN "Categorie" CA ON T."categorieId" = CA.id
     ''')
     titres = cur.fetchall()
     cur.close()
@@ -49,9 +49,9 @@ def get_all_concepts():
     conn = get_connection()
     cur = conn.cursor()
     cur.execute('''
-        SELECT C.id, C.valeur, C.type, C.mood, C.keywords, C.categorieId, CA.name, C.createdAt, C.updatedAt
+        SELECT C.id, C.valeur, C.type, C.mood, C.keywords, C."categorieId", CA.name, C."createdAt", C."updatedAt"
         FROM "Concept" C
-        LEFT JOIN "Categorie" CA ON C.categorieId = CA.id
+        LEFT JOIN "Categorie" CA ON C."categorieId" = CA.id
     ''')
     concepts = cur.fetchall()
     cur.close()
@@ -88,16 +88,17 @@ def delete_concept(id):
     conn.commit()
     cur.close()
     conn.close()
+    
 # CRUD pour FragmentsHistoire
 def get_all_fragments():
     conn = get_connection()
     cur = conn.cursor()
     cur.execute('''
-        SELECT F.id, F.texte, F.appliesTo, F.genre, F.minNameLength, F.maxNameLength,
-               F.cultureId, CU.name, F.categorieId, CA.name
+        SELECT F.id, F.texte, F."appliesTo", F.genre, F."minNameLength", F."maxNameLength",
+               F."cultureId", CU.name, F."categorieId", CA.name
         FROM "FragmentsHistoire" F
-        LEFT JOIN "Culture" CU ON F.cultureId = CU.id
-        LEFT JOIN "Categorie" CA ON F.categorieId = CA.id
+        LEFT JOIN "Culture" CU ON F."cultureId" = CU.id
+        LEFT JOIN "Categorie" CA ON F."categorieId" = CA.id
     ''')
     fragments = cur.fetchall()
     cur.close()
@@ -163,6 +164,15 @@ def check_user_credentials(username, password):
     return result is not None
 
 # CRUD pour Categorie
+def get_all_categories():
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT id, name, description FROM "Categorie"')
+    categories = cur.fetchall()
+    cur.close()
+    conn.close()
+    return categories
+
 def insert_categorie(name, description):
     conn = get_connection()
     cur = conn.cursor()
@@ -186,18 +196,8 @@ def delete_categorie(id):
     conn.commit()
     cur.close()
     conn.close()
-
-# Nouvelle fonction pour lire toutes les catégories
-def get_all_categories():
-    conn = get_connection()
-    cur = conn.cursor()
-    cur.execute('SELECT id, name, description FROM "Categorie"')
-    categories = cur.fetchall()
-    cur.close()
-    conn.close()
-    return categories
-
-# Nouvelle fonction pour lire tous les utilisateurs
+    
+# CRUD pour User
 def get_all_users():
     conn = get_connection()
     cur = conn.cursor()
@@ -207,7 +207,6 @@ def get_all_users():
     conn.close()
     return users
 
-# CRUD pour User
 def insert_user(username, password, email, role="Editor", isActive=True):
     conn = get_connection()
     cur = conn.cursor()
@@ -250,8 +249,7 @@ def delete_user(id):
     cur.execute('DELETE FROM "User" WHERE id=%s', (id,))
     conn.commit()
     cur.close()
-    conn.close()
-    
+    conn.close()    
 
 # CRUD pour Culture
 def get_all_cultures():
@@ -291,24 +289,24 @@ def delete_culture(id):
 def get_all_nom_personnages():
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute('SELECT id, nom, prenom, categorie_id, culture_id FROM "NomPersonnage"')
+    cur.execute('SELECT id, valeur, genre, "categorieId", "cultureId", "createdAt", "updatedAt" FROM "NomPersonnage"')
     noms = cur.fetchall()
     cur.close()
     conn.close()
     return noms
 
-def insert_nom_personnage(nom, prenom, categorie_id, culture_id):
+def insert_nom_personnage(valeur, genre, categorie_id, culture_id):
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute('INSERT INTO "NomPersonnage" (nom, prenom, categorie_id, culture_id) VALUES (%s, %s, %s, %s)', (nom, prenom, categorie_id, culture_id))
+    cur.execute('INSERT INTO "NomPersonnage" (valeur, genre, "categorieId", "cultureId") VALUES (%s, %s, %s, %s)', (valeur, genre, categorie_id, culture_id))
     conn.commit()
     cur.close()
     conn.close()
 
-def update_nom_personnage(id, nom, prenom, categorie_id, culture_id):
+def update_nom_personnage(id, valeur, genre, categorie_id, culture_id):
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute('UPDATE "NomPersonnage" SET nom=%s, prenom=%s, categorie_id=%s, culture_id=%s WHERE id=%s', (nom, prenom, categorie_id, culture_id, id))
+    cur.execute('UPDATE "NomPersonnage" SET valeur=%s, genre=%s, "categorieId"=%s, "cultureId"=%s WHERE id=%s', (valeur, genre, categorie_id, culture_id, id))
     conn.commit()
     cur.close()
     conn.close()
@@ -326,9 +324,9 @@ def get_all_lieux():
     conn = get_connection()
     cur = conn.cursor()
     cur.execute('''
-        SELECT L.id, L.value, L.type, L.categorieId, C.name
+        SELECT L.id, L.value, L.type, L."categorieId", C.name
         FROM "Lieux" L
-        LEFT JOIN "Categorie" C ON L.categorieId = C.id
+        LEFT JOIN "Categorie" C ON L."categorieId" = C.id
     ''')
     lieux = cur.fetchall()
     cur.close()
@@ -338,7 +336,7 @@ def get_all_lieux():
 def insert_lieu(value, type_field, categorie_id):
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute('INSERT INTO "Lieux" (value, type, categorieId) VALUES (%s, %s, %s)', (value, type_field, categorie_id))
+    cur.execute('INSERT INTO "Lieux" (value, type, "categorieId") VALUES (%s, %s, %s)', (value, type_field, categorie_id))
     conn.commit()
     cur.close()
     conn.close()
@@ -346,7 +344,7 @@ def insert_lieu(value, type_field, categorie_id):
 def update_lieu(id, value, type_field, categorie_id):
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute('UPDATE "Lieux" SET value=%s, type=%s, categorieId=%s WHERE id=%s', (value, type_field, categorie_id, id))
+    cur.execute('UPDATE "Lieux" SET value=%s, type=%s, "categorieId"=%s WHERE id=%s', (value, type_field, categorie_id, id))
     conn.commit()
     cur.close()
     conn.close()

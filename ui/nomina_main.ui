@@ -6,243 +6,111 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1061</width>
-    <height>920</height>
+    <width>1200</width>
+    <height>800</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Nomina Dashboard</string>
   </property>
-  <property name="animated">
-   <bool>false</bool>
-  </property>
-  <widget class="QWidget" name="centralwidget">
-   <widget class="QQuickWidget" name="navBarWidget">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>10</y>
-      <width>1051</width>
-      <height>131</height>
-     </rect>
-    </property>
-    <property name="resizeMode">
-     <enum>QQuickWidget::SizeRootObjectToView</enum>
-    </property>
+  <widget class="QSplitter" name="centralwidget">
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <widget class="QWidget" name="menuWidget">
+    <layout class="QVBoxLayout" name="verticalLayout_menu">
+     <item>
+      <widget class="QPushButton" name="btnUsers">
+       <property name="text">
+        <string>Utilisateurs</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnTitres">
+       <property name="text">
+        <string>Titres</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnCategories">
+       <property name="text">
+        <string>Catégories</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnCultures">
+       <property name="text">
+        <string>Cultures</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnLieux">
+       <property name="text">
+        <string>Lieux</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnFragments">
+       <property name="text">
+        <string>Fragments</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnConcepts">
+       <property name="text">
+        <string>Concepts</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
    </widget>
-   <widget class="QQuickWidget" name="heroWidget">
-    <property name="geometry">
-     <rect>
-      <x>-20</x>
-      <y>150</y>
-      <width>1111</width>
-      <height>571</height>
-     </rect>
-    </property>
-    <property name="resizeMode">
-     <enum>QQuickWidget::SizeRootObjectToView</enum>
-    </property>
-   </widget>
-   <widget class="QLabel" name="subtitleLaber">
-    <property name="geometry">
-     <rect>
-      <x>410</x>
-      <y>230</y>
-      <width>211</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>API de génération narrative</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="titleLabel">
-    <property name="geometry">
-     <rect>
-      <x>210</x>
-      <y>300</y>
-      <width>661</width>
-      <height>81</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Papyrus</family>
-      <pointsize>24</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>CRÉEZ, NOMMEZ, RACONTEZ</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="descriptionLabel">
-    <property name="geometry">
-     <rect>
-      <x>230</x>
-      <y>360</y>
-      <width>631</width>
-      <height>171</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Papyrus</family>
-      <pointsize>11</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Une API innovante dédiée à la narration et à la génération de noms. Créez des personnages, des lieux et des créatures avec des histoires captivantes.</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-    <property name="wordWrap">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QQuickWidget" name="buttonRowWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>260</x>
-      <y>510</y>
-      <width>561</width>
-      <height>131</height>
-     </rect>
-    </property>
-    <property name="resizeMode">
-     <enum>QQuickWidget::SizeRootObjectToView</enum>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="startButton">
-    <property name="geometry">
-     <rect>
-      <x>280</x>
-      <y>550</y>
-      <width>261</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Commencer gratuitement →</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="docButton">
-    <property name="geometry">
-     <rect>
-      <x>550</x>
-      <y>550</y>
-      <width>261</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Voir la documentation</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="commencer">
-    <property name="geometry">
-     <rect>
-      <x>930</x>
-      <y>30</y>
-      <width>101</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Commencer</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="Connexion">
-    <property name="geometry">
-     <rect>
-      <x>820</x>
-      <y>30</y>
-      <width>101</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Connexion</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="documentation">
-    <property name="geometry">
-     <rect>
-      <x>680</x>
-      <y>30</y>
-      <width>131</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Documentation</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="tarifs">
-    <property name="geometry">
-     <rect>
-      <x>570</x>
-      <y>30</y>
-      <width>101</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Tarifs</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="nomina">
-    <property name="geometry">
-     <rect>
-      <x>210</x>
-      <y>30</y>
-      <width>101</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>NOMINA</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="casusage">
-    <property name="geometry">
-     <rect>
-      <x>460</x>
-      <y>30</y>
-      <width>101</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Cas d'usage</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="fonctionnalites">
-    <property name="geometry">
-     <rect>
-      <x>330</x>
-      <y>30</y>
-      <width>121</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Fonctionnalités</string>
-    </property>
+   <widget class="QWidget" name="mainContentWidget">
+    <layout class="QVBoxLayout" name="verticalLayout_content">
+     <item>
+      <widget class="QStackedWidget" name="stackedWidget">
+       <widget class="QWidget" name="pageUsers">
+        <layout class="QVBoxLayout" name="verticalLayout_users"/>
+       </widget>
+       <widget class="QWidget" name="pageTitres">
+        <layout class="QVBoxLayout" name="verticalLayout_titres"/>
+       </widget>
+       <widget class="QWidget" name="pageCategories">
+        <layout class="QVBoxLayout" name="verticalLayout_categories"/>
+       </widget>
+       <widget class="QWidget" name="pageCultures">
+        <layout class="QVBoxLayout" name="verticalLayout_cultures"/>
+       </widget>
+       <widget class="QWidget" name="pageLieux">
+        <layout class="QVBoxLayout" name="verticalLayout_lieux"/>
+       </widget>
+       <widget class="QWidget" name="pageFragments">
+        <layout class="QVBoxLayout" name="verticalLayout_fragments"/>
+       </widget>
+       <widget class="QWidget" name="pageConcepts">
+        <layout class="QVBoxLayout" name="verticalLayout_concepts"/>
+       </widget>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -250,20 +118,13 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1061</width>
+     <width>1200</width>
      <height>22</height>
     </rect>
    </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QQuickWidget</class>
-   <extends>QWidget</extends>
-   <header location="global">QtQuickWidgets/QQuickWidget</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

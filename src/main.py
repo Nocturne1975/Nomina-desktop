@@ -15,7 +15,45 @@ from db import (
 )
 
 class NominaWindow(QtWidgets.QMainWindow):
-        def ajouter_lieu(self):
+    def modifier_fragment(self):
+        from db import update_fragment, get_all_cultures, get_all_categories
+        row = self.fragmentsTable.currentRow()
+        if row < 0:
+            QtWidgets.QMessageBox.warning(self, "Erreur", "Sélectionnez un fragment à modifier.")
+            return
+        fragment_id = self.fragmentsTable.item(row, 0).text()
+        old_texte = self.fragmentsTable.item(row, 1).text()
+        dialog = QtWidgets.QDialog(self)
+        dialog.setWindowTitle("Modifier un fragment d'histoire")
+        layout = QtWidgets.QFormLayout(dialog)
+        texte = QtWidgets.QLineEdit(old_texte)
+        # Ajouter ici les autres champs si besoin (appliesTo, genre, etc.)
+        layout.addRow("Texte", texte)
+        btn = QtWidgets.QPushButton("Enregistrer")
+        layout.addWidget(btn)
+        btn.clicked.connect(lambda: self._update_fragment(dialog, fragment_id, texte.text()))
+        dialog.exec()
+        def _update_fragment(self, dialog, fragment_id, texte):
+            from db import update_fragment
+            update_fragment(fragment_id, texte)
+            self.load_fragments()
+            dialog.accept()
+            
+    def load_concepts(self):
+        from db import get_all_concepts
+        self.conceptsTable.setRowCount(0)
+        self.conceptsTable.setColumnCount(9)
+        self.conceptsTable.setHorizontalHeaderLabels([
+            "ID", "Valeur", "Type", "Mood", "Keywords", "Catégorie ID", "Catégorie", "Créé le", "Modifié le"
+        ])
+        concepts = get_all_concepts()
+        for row_idx, concept in enumerate(concepts):
+            self.conceptsTable.insertRow(row_idx)
+            for col_idx, value in enumerate(concept):
+                item = QtWidgets.QTableWidgetItem(str(value))
+                self.conceptsTable.setItem(row_idx, col_idx, item)
+                
+    def ajouter_lieu(self):
             from db import get_all_categories, insert_lieu
             dialog = QtWidgets.QDialog(self)
             dialog.setWindowTitle("Ajouter un lieu")
@@ -35,13 +73,13 @@ class NominaWindow(QtWidgets.QMainWindow):
             btn.clicked.connect(lambda: self._insert_lieu(dialog, value.text(), type_field.text(), categorie_combo.currentData()))
             dialog.exec()
 
-        def _insert_lieu(self, dialog, value, type_field, categorie_id):
+    def _insert_lieu(self, dialog, value, type_field, categorie_id):
             from db import insert_lieu
             insert_lieu(value, type_field, categorie_id)
             self.load_lieux()
             dialog.accept()
 
-        def modifier_lieu(self):
+    def modifier_lieu(self):
             from db import get_all_categories, update_lieu
             row = self.lieuxTable.currentRow()
             if row < 0:
@@ -71,13 +109,13 @@ class NominaWindow(QtWidgets.QMainWindow):
             btn.clicked.connect(lambda: self._update_lieu(dialog, lieu_id, value.text(), type_field.text(), categorie_combo.currentData()))
             dialog.exec()
 
-        def _update_lieu(self, dialog, lieu_id, value, type_field, categorie_id):
+    def _update_lieu(self, dialog, lieu_id, value, type_field, categorie_id):
             from db import update_lieu
             update_lieu(lieu_id, value, type_field, categorie_id)
             self.load_lieux()
             dialog.accept()
 
-        def supprimer_lieu(self):
+    def supprimer_lieu(self):
             from db import delete_lieu
             row = self.lieuxTable.currentRow()
             if row < 0:
@@ -89,7 +127,7 @@ class NominaWindow(QtWidgets.QMainWindow):
                 delete_lieu(lieu_id)
                 self.load_lieux()
                 
-        def ajouter_fragment(self):
+    def ajouter_fragment(self):
             from db import insert_fragment
             dialog = QtWidgets.QDialog(self)
             dialog.setWindowTitle("Ajouter un fragment d'histoire")
@@ -101,13 +139,25 @@ class NominaWindow(QtWidgets.QMainWindow):
             btn.clicked.connect(lambda: self._insert_fragment(dialog, texte.text()))
             dialog.exec()
 
-        def _insert_fragment(self, dialog, texte):
+    def _insert_fragment(self, dialog, texte):
             from db import insert_fragment
             insert_fragment(texte)
             self.load_fragments()
             dialog.accept()
+        
+    def supprimer_fragment(self):
+            from db import delete_fragment
+            row = self.fragmentsTable.currentRow()
+            if row < 0:
+                QtWidgets.QMessageBox.warning(self, "Erreur", "Sélectionnez un fragment à supprimer.")
+                return
+            fragment_id = self.fragmentsTable.item(row, 0).text()
+            reply = QtWidgets.QMessageBox.question(self, "Confirmer", "Supprimer ce fragment ?", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+            if reply == QtWidgets.QMessageBox.Yes:
+                delete_fragment(fragment_id)
+                self.load_fragments()
 
-        def ajouter_concept(self):
+    def ajouter_concept(self):
             from db import get_all_categories, insert_concept
             dialog = QtWidgets.QDialog(self)
             dialog.setWindowTitle("Ajouter un concept")
@@ -133,13 +183,13 @@ class NominaWindow(QtWidgets.QMainWindow):
             ))
             dialog.exec()
 
-        def _insert_concept(self, dialog, valeur, type_field, mood, keywords, categorie_id):
+    def _insert_concept(self, dialog, valeur, type_field, mood, keywords, categorie_id):
             from db import insert_concept
             insert_concept(valeur, type_field, mood, keywords, categorie_id)
             self.load_concepts()
             dialog.accept()
 
-        def modifier_concept(self):
+    def modifier_concept(self):
             from db import get_all_categories, update_concept
             row = self.conceptsTable.currentRow()
             if row < 0:
@@ -177,13 +227,13 @@ class NominaWindow(QtWidgets.QMainWindow):
             ))
             dialog.exec()
 
-        def _update_concept(self, dialog, concept_id, valeur, type_field, mood, keywords, categorie_id):
+    def _update_concept(self, dialog, concept_id, valeur, type_field, mood, keywords, categorie_id):
             from db import update_concept
             update_concept(concept_id, valeur, type_field, mood, keywords, categorie_id)
             self.load_concepts()
             dialog.accept()
 
-        def supprimer_concept(self):
+    def supprimer_concept(self):
             from db import delete_concept
             row = self.conceptsTable.currentRow()
             if row < 0:
@@ -195,7 +245,7 @@ class NominaWindow(QtWidgets.QMainWindow):
                 delete_concept(concept_id)
                 self.load_concepts()
 
-        def load_lieux(self):
+    def load_lieux(self):
             from db import get_all_lieux
             rows = get_all_lieux()
             self.lieuxTable.setRowCount(len(rows))
@@ -203,8 +253,6 @@ class NominaWindow(QtWidgets.QMainWindow):
                 for col_idx, value in enumerate(row_data):
                     self.lieuxTable.setItem(row_idx, col_idx, QtWidgets.QTableWidgetItem(str(value)))
 
-    # Toutes les méthodes suivantes sont corrigées à 4 espaces par niveau, sans tabulation
-    # ...existing code...
                 # Layout principal
                 central_widget = QtWidgets.QWidget()
                 self.setCentralWidget(central_widget)
@@ -360,11 +408,11 @@ class NominaWindow(QtWidgets.QMainWindow):
                 self.load_titres()
                 self.load_concepts()
 
-            def load_categories(self):
-                # ... toutes les méthodes suivantes sont aussi décalées à 4 espaces ...
+    def load_categories(self):
+               
                 return
 
-        def load_titres(self):
+    def load_titres(self):
             from db import get_all_titres
             rows = get_all_titres()
             self.titresTable.setRowCount(len(rows))
@@ -372,7 +420,7 @@ class NominaWindow(QtWidgets.QMainWindow):
                 for col_idx, value in enumerate(row_data):
                     self.titresTable.setItem(row_idx, col_idx, QtWidgets.QTableWidgetItem(str(value)))
 
-        def ajouter_titre(self):
+    def ajouter_titre(self):
             from db import get_all_cultures, get_all_categories, insert_titre
             dialog = QtWidgets.QDialog(self)
             dialog.setWindowTitle("Ajouter un titre")
@@ -401,13 +449,13 @@ class NominaWindow(QtWidgets.QMainWindow):
             ))
             dialog.exec()
 
-        def _insert_titre(self, dialog, valeur, type_field, genre, culture_id, categorie_id):
+    def _insert_titre(self, dialog, valeur, type_field, genre, culture_id, categorie_id):
             from db import insert_titre
             insert_titre(valeur, type_field, genre, culture_id, categorie_id)
             self.load_titres()
             dialog.accept()
 
-        def modifier_titre(self):
+    def modifier_titre(self):
             from db import get_all_cultures, get_all_categories, update_titre
             row = self.titresTable.currentRow()
             if row < 0:
@@ -450,13 +498,13 @@ class NominaWindow(QtWidgets.QMainWindow):
             ))
             dialog.exec()
 
-        def _update_titre(self, dialog, titre_id, valeur, type_field, genre, culture_id, categorie_id):
+    def _update_titre(self, dialog, titre_id, valeur, type_field, genre, culture_id, categorie_id):
             from db import update_titre
             update_titre(titre_id, valeur, type_field, genre, culture_id, categorie_id)
             self.load_titres()
             dialog.accept()
 
-        def supprimer_titre(self):
+    def supprimer_titre(self):
             from db import delete_titre
             row = self.titresTable.currentRow()
             if row < 0:
@@ -468,7 +516,7 @@ class NominaWindow(QtWidgets.QMainWindow):
                 delete_titre(titre_id)
                 self.load_titres()
             
-        def __init__(self):
+    def __init__(self):
             super().__init__()
             ui_path = os.path.join(os.path.dirname(__file__), '../ui/nomina_main.ui')
             uic.loadUi(ui_path, self)
@@ -628,21 +676,20 @@ class NominaWindow(QtWidgets.QMainWindow):
             self.load_titres()
             self.load_concepts()
 
-        def load_categories(self):
-            # ... (toutes les méthodes suivantes sont aussi décalées à 4 espaces)
-            from db import get_connection
-            conn = get_connection()
-            cur = conn.cursor()
-            cur.execute('SELECT id, name, description, "createdAt" FROM "Categorie"')
-            rows = cur.fetchall()
-            self.categorieTable.setRowCount(len(rows))
-            for row_idx, row_data in enumerate(rows):
-                for col_idx, value in enumerate(row_data):
-                    self.categorieTable.setItem(row_idx, col_idx, QtWidgets.QTableWidgetItem(str(value)))
-            cur.close()
-            conn.close()
+    def load_categories(self):
+        from db import get_connection
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute('SELECT id, name, description, "createdAt" FROM "Categorie"')
+        rows = cur.fetchall()
+        self.categorieTable.setRowCount(len(rows))
+        for row_idx, row_data in enumerate(rows):
+            for col_idx, value in enumerate(row_data):
+                self.categorieTable.setItem(row_idx, col_idx, QtWidgets.QTableWidgetItem(str(value)))
+        cur.close()
+        conn.close()
 
-        def load_users(self):
+    def load_users(self):
             conn = get_connection()
             cur = conn.cursor()
             cur.execute('SELECT id, username, email, role FROM "User"')
@@ -654,10 +701,10 @@ class NominaWindow(QtWidgets.QMainWindow):
             cur.close()
             conn.close()
 
-        def on_start_clicked(self):
+    def on_start_clicked(self):
             print("Bouton 'Commencer gratuitement' cliqué!")
             
-        def ajouter_categorie(self):
+    def ajouter_categorie(self):
             dialog = QtWidgets.QDialog(self)
             dialog.setWindowTitle("Ajouter une catégorie")
             layout = QtWidgets.QFormLayout(dialog)
@@ -670,7 +717,7 @@ class NominaWindow(QtWidgets.QMainWindow):
             btn.clicked.connect(lambda: self._insert_categorie(dialog, name.text(), description.text()))
             dialog.exec()
             
-        def _insert_categorie(self, dialog, name, description):
+    def _insert_categorie(self, dialog, name, description):
             conn = get_connection()
             cur = conn.cursor()
             cur.execute('INSERT INTO "Categorie" (name, description) VALUES (%s, %s)', (name, description))
@@ -680,7 +727,7 @@ class NominaWindow(QtWidgets.QMainWindow):
             self.load_categories()
             dialog.accept()
 
-        def ajouter_utilisateur(self):
+    def ajouter_utilisateur(self):
             dialog = QtWidgets.QDialog(self)
             dialog.setWindowTitle("Ajouter un utilisateur")
             layout = QtWidgets.QFormLayout(dialog)
@@ -697,7 +744,7 @@ class NominaWindow(QtWidgets.QMainWindow):
             btn.clicked.connect(lambda: self._insert_user(dialog, username.text(), email.text(), statut.text(), password.text()))
             dialog.exec()
 
-        def _insert_user(self, dialog, username, email, statut, password):
+    def _insert_user(self, dialog, username, email, statut, password):
             conn = get_connection()
             cur = conn.cursor()
             cur.execute("INSERT INTO users (username, email, statut, password) VALUES (%s, %s, %s, %s)", (username, email, statut, password))
@@ -707,7 +754,7 @@ class NominaWindow(QtWidgets.QMainWindow):
             self.load_users()
             dialog.accept()
             
-        def modifier_categorie(self):
+    def modifier_categorie(self):
             row = self.categorieTable.currentRow()
             if row < 0:
                 return
@@ -727,7 +774,7 @@ class NominaWindow(QtWidgets.QMainWindow):
             dialog.exec()
 
         
-        def _update_categorie(self, dialog, id, name, description):
+    def _update_categorie(self, dialog, id, name, description):
             conn = get_connection()
             cur = conn.cursor()
             cur.execute('UPDATE "Categorie" SET name=%s, description=%s WHERE id=%s', (name, description, id))
@@ -737,7 +784,7 @@ class NominaWindow(QtWidgets.QMainWindow):
             self.load_categories()
             dialog.accept()
 
-        def load_cultures(self):
+    def load_cultures(self):
             from db import get_all_cultures
             rows = get_all_cultures()
             self.cultureTable.setRowCount(len(rows))
@@ -745,7 +792,7 @@ class NominaWindow(QtWidgets.QMainWindow):
                 for col_idx, value in enumerate(row_data):
                     self.cultureTable.setItem(row_idx, col_idx, QtWidgets.QTableWidgetItem(str(value)))
 
-        def ajouter_culture(self):
+    def ajouter_culture(self):
             from db import insert_culture
             dialog = QtWidgets.QDialog(self)
             dialog.setWindowTitle("Ajouter une culture")
@@ -759,13 +806,13 @@ class NominaWindow(QtWidgets.QMainWindow):
             btn.clicked.connect(lambda: self._insert_culture(dialog, name.text(), description.text()))
             dialog.exec()
 
-        def _insert_culture(self, dialog, name, description):
+    def _insert_culture(self, dialog, name, description):
             from db import insert_culture
             insert_culture(name, description)
             self.load_cultures()
             dialog.accept()
 
-        def modifier_culture(self):
+    def modifier_culture(self):
             from db import update_culture
             row = self.cultureTable.currentRow()
             if row < 0:
@@ -786,13 +833,13 @@ class NominaWindow(QtWidgets.QMainWindow):
             btn.clicked.connect(lambda: self._update_culture(dialog, culture_id, name.text(), description.text()))
             dialog.exec()
 
-        def _update_culture(self, dialog, culture_id, name, description):
+    def _update_culture(self, dialog, culture_id, name, description):
             from db import update_culture
             update_culture(culture_id, name, description)
             self.load_cultures()
             dialog.accept()
 
-        def supprimer_culture(self):
+    def supprimer_culture(self):
             from db import delete_culture
             row = self.cultureTable.currentRow()
             if row < 0:
@@ -804,7 +851,7 @@ class NominaWindow(QtWidgets.QMainWindow):
                 delete_culture(culture_id)
                 self.load_cultures()
 
-        def modifier_utilisateur(self):
+    def modifier_utilisateur(self):
             row = self.tableWidget.currentRow()
             if row < 0:
                 return
@@ -826,7 +873,7 @@ class NominaWindow(QtWidgets.QMainWindow):
             btn.clicked.connect(lambda: self._update_user(dialog, id, username_edit.text(), email_edit.text(), statut_edit.text()))
             dialog.exec()
 
-        def _update_user(self, dialog, id, username, email, statut):
+    def _update_user(self, dialog, id, username, email, statut):
             conn = get_connection()
             cur = conn.cursor()
             cur.execute("UPDATE users SET username=%s, email=%s, statut=%s WHERE id=%s", (username, email, statut, id))
@@ -836,7 +883,7 @@ class NominaWindow(QtWidgets.QMainWindow):
             self.load_users()
             dialog.accept()
 
-        def supprimer_categorie(self):
+    def supprimer_categorie(self):
             row = self.categorieTable.currentRow()
             if row < 0:
                 return
@@ -852,7 +899,7 @@ class NominaWindow(QtWidgets.QMainWindow):
                 self.load_categories()
                 
         
-        def supprimer_utilisateur(self):
+    def supprimer_utilisateur(self):
             row = self.tableWidget.currentRow()
             if row < 0:
                 return
@@ -866,6 +913,81 @@ class NominaWindow(QtWidgets.QMainWindow):
                 cur.close()
                 conn.close()
                 self.load_users()
+
+    def supprimer_fragment(self):
+            from db import delete_fragment
+            row = self.fragmentsTable.currentRow()
+            if row < 0:
+                QtWidgets.QMessageBox.warning(self, "Erreur", "Sélectionnez un fragment à supprimer.")
+                return
+            fragment_id = self.fragmentsTable.item(row, 0).text()
+            reply = QtWidgets.QMessageBox.question(self, "Confirmer", "Supprimer ce fragment ?", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+            if reply == QtWidgets.QMessageBox.Yes:
+                delete_fragment(fragment_id)
+                self.load_fragments()
+
+    def modifier_fragment(self):
+            from db import update_fragment, get_all_cultures, get_all_categories
+            row = self.fragmentsTable.currentRow()
+            if row < 0:
+                QtWidgets.QMessageBox.warning(self, "Erreur", "Sélectionnez un fragment à modifier.")
+                return
+            fragment_id = self.fragmentsTable.item(row, 0).text()
+            old_texte = self.fragmentsTable.item(row, 1).text()
+            old_appliesTo = self.fragmentsTable.item(row, 2).text()
+            old_genre = self.fragmentsTable.item(row, 3).text()
+            old_minNameLength = self.fragmentsTable.item(row, 4).text()
+            old_maxNameLength = self.fragmentsTable.item(row, 5).text()
+            old_culture_id = self.fragmentsTable.item(row, 6).text()
+            old_categorie_id = self.fragmentsTable.item(row, 8).text()
+            dialog = QtWidgets.QDialog(self)
+            dialog.setWindowTitle("Modifier un fragment d'histoire")
+            layout = QtWidgets.QFormLayout(dialog)
+            texte = QtWidgets.QLineEdit(old_texte)
+            appliesTo = QtWidgets.QLineEdit(old_appliesTo)
+            genre = QtWidgets.QLineEdit(old_genre)
+            minNameLength = QtWidgets.QLineEdit(old_minNameLength)
+            maxNameLength = QtWidgets.QLineEdit(old_maxNameLength)
+            culture_combo = QtWidgets.QComboBox()
+            categorie_combo = QtWidgets.QComboBox()
+            culture_combo.addItem("Aucune", None)
+            for c in get_all_cultures():
+                culture_combo.addItem(c[1], c[0])
+                if str(c[0]) == old_culture_id:
+                    culture_combo.setCurrentIndex(culture_combo.count() - 1)
+            categorie_combo.addItem("Aucune", None)
+            for cat in get_all_categories():
+                categorie_combo.addItem(cat[1], cat[0])
+                if str(cat[0]) == old_categorie_id:
+                    categorie_combo.setCurrentIndex(categorie_combo.count() - 1)
+            layout.addRow("Texte", texte)
+            layout.addRow("AppliesTo", appliesTo)
+            layout.addRow("Genre", genre)
+            layout.addRow("MinLen", minNameLength)
+            layout.addRow("MaxLen", maxNameLength)
+            layout.addRow("Culture", culture_combo)
+            layout.addRow("Catégorie", categorie_combo)
+            btn = QtWidgets.QPushButton("Enregistrer")
+            layout.addWidget(btn)
+            btn.clicked.connect(lambda: self.update_fragment(
+                dialog, fragment_id, texte.text(), appliesTo.text(), genre.text(),
+                minNameLength.text(), maxNameLength.text(), culture_combo.currentData(), categorie_combo.currentData()
+            ))
+            dialog.exec()
+            
+    def load_fragments(self):
+            from db import get_all_fragments
+            rows = get_all_fragments()
+            self.fragmentsTable.setRowCount(len(rows))
+            for row_idx, row_data in enumerate(rows):
+                for col_idx, value in enumerate(row_data):
+                    self.fragmentsTable.setItem(row_idx, col_idx, QtWidgets.QTableWidgetItem(str(value)))
+                    
+    def update_fragment(self, dialog, fragment_id, texte, appliesTo, genre, minNameLength, maxNameLength, culture_id, categorie_id):
+            from db import update_fragment
+            update_fragment(fragment_id, texte, appliesTo, genre, minNameLength, maxNameLength, culture_id, categorie_id)
+            self.load_fragments()
+            dialog.accept()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

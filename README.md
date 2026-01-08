@@ -9,12 +9,14 @@ Date : 05/11/2025
 
 ## Table des matières
 
-- [Présentation](#présentation)
-- [Architecture technique](#architecture-technique)
-- [Installation & lancement](#installation--lancement)
-- [Structure du projet](#structure-du-projet)
-- [Contribution & contact](#contribution--contact)
-- [Licence](#licence)
+- [Nomina-desktop — Application PyQt6](#nomina-desktop--application-pyqt6)
+  - [Table des matières](#table-des-matières)
+  - [Présentation](#présentation)
+  - [Architecture technique](#architecture-technique)
+  - [Installation \& lancement](#installation--lancement)
+  - [Structure du projet](#structure-du-projet)
+  - [Contribution \& contact](#contribution--contact)
+  - [Licence](#licence)
 
 ---
 
@@ -71,7 +73,7 @@ python src/main.py
 ## Contribution & contact
 
 - Pour contribuer : crée une issue ou une pull request sur le dépôt GitHub.
-- Pour retours : contact@nomina.example (remplace par ton email réel).
+- Pour retours : soniacorbin4@gmail.com
 
 > Nomina-desktop est un projet en cours. Contributions, idées et retours sont les bienvenus — ouvre une issue ou contacte-moi directement.
 

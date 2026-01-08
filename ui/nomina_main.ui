@@ -15,7 +15,7 @@
   </property>
   <widget class="QSplitter" name="centralwidget">
    <property name="orientation">
-    <enum>Qt::Horizontal</enum>
+    <enum>Qt::Orientation::Horizontal</enum>
    </property>
    <widget class="QWidget" name="menuWidget">
     <layout class="QVBoxLayout" name="verticalLayout_menu">
@@ -69,9 +69,16 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="btnNomPersonnage">
+       <property name="text">
+        <string>Nom Personnage</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="verticalSpacer">
        <property name="orientation">
-        <enum>Qt::Vertical</enum>
+        <enum>Qt::Orientation::Vertical</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -87,26 +94,610 @@
     <layout class="QVBoxLayout" name="verticalLayout_content">
      <item>
       <widget class="QStackedWidget" name="stackedWidget">
+       <property name="currentIndex">
+        <number>3</number>
+       </property>
        <widget class="QWidget" name="pageUsers">
-        <layout class="QVBoxLayout" name="verticalLayout_users"/>
+        <layout class="QVBoxLayout" name="verticalLayout_users">
+         <item>
+          <widget class="QTableWidget" name="usersTable">
+           <column>
+            <property name="text">
+             <string>id</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>username</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>password</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>email</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>role</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>createdAt</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>updatedAt</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>isActive</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="addUserButton">
+           <property name="text">
+            <string>Ajouter Utilisateur</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="editUserButton">
+           <property name="text">
+            <string>Modifier Utilisateur</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="deleteUserButton">
+           <property name="text">
+            <string>Supprimer Utilisateur</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
        <widget class="QWidget" name="pageTitres">
-        <layout class="QVBoxLayout" name="verticalLayout_titres"/>
+        <layout class="QVBoxLayout" name="verticalLayout_titres">
+         <item>
+          <widget class="QTableWidget" name="titresTable">
+           <column>
+            <property name="text">
+             <string>id</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>valeur</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>type</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>genre</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>cultureId</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>categorieId</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>createdAt</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>updatedAt</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Categorie</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Culture</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="addTitresButton">
+           <property name="text">
+            <string>Ajouter Titre</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="editTitresButton">
+           <property name="text">
+            <string>Modifier Titre</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="deleteTitresButton">
+           <property name="text">
+            <string>Supprimer Titre</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="pageNomsPersonnages">
+        <layout class="QVBoxLayout" name="verticalLayout_nomsPersonnages">
+         <item>
+          <widget class="QTableWidget" name="nomsPersonnagesTable">
+           <column>
+            <property name="text">
+             <string>id</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>valeur</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>genre</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>cultureId</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>categorieId</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>createdAt</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>updatedAt</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Categorie</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Culture</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="addNomsPersonnagesButton">
+           <property name="text">
+            <string>Ajouter Nom Personnage</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="editNomPersonnagesButton">
+           <property name="text">
+            <string>Modifier Nom Personnage</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="deleteNomsPersonnagesButton">
+           <property name="text">
+            <string>Supprimer Nom Personnage</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
        <widget class="QWidget" name="pageCategories">
-        <layout class="QVBoxLayout" name="verticalLayout_categories"/>
+        <layout class="QVBoxLayout" name="verticalLayout_categories">
+         <item>
+          <widget class="QPushButton" name="addCategoriesButton">
+           <property name="text">
+            <string> Ajouter Catégorie</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTableWidget" name="categoriesTable">
+           <row>
+            <property name="text">
+             <string>Nouvelle ligne</string>
+            </property>
+           </row>
+           <row>
+            <property name="text">
+             <string>Nouvelle ligne</string>
+            </property>
+           </row>
+           <row>
+            <property name="text">
+             <string>Nouvelle ligne</string>
+            </property>
+           </row>
+           <row>
+            <property name="text">
+             <string>Nouvelle ligne</string>
+            </property>
+           </row>
+           <column>
+            <property name="text">
+             <string>id</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>nom</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>description</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>createdAt</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>updatedAt</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Concepts</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>FragmentsHistoires</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Lieux</string>
+            </property>
+           </column>
+           <item row="0" column="0">
+            <property name="text">
+             <string>test</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="deleteCategoriesButton">
+           <property name="text">
+            <string>Supprimer Catégorie</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="editCategoriesButton">
+           <property name="text">
+            <string>Modifier Catégorie</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
        <widget class="QWidget" name="pageCultures">
-        <layout class="QVBoxLayout" name="verticalLayout_cultures"/>
+        <layout class="QVBoxLayout" name="verticalLayout_cultures">
+         <item>
+          <widget class="QTableWidget" name="culturesTable">
+           <column>
+            <property name="text">
+             <string/>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>nom</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>description</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>createdAt</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>updatedAt</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>FragmentsHistoire</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>NomPersonnages</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Titres</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="addCulturesButton">
+           <property name="text">
+            <string>Ajouter Culture</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="editCulturesButton">
+           <property name="text">
+            <string>Modifier Culture</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="deleteCulturesButton">
+           <property name="text">
+            <string>Supprimer Culture</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
        <widget class="QWidget" name="pageLieux">
-        <layout class="QVBoxLayout" name="verticalLayout_lieux"/>
+        <layout class="QVBoxLayout" name="verticalLayout_lieux">
+         <item>
+          <widget class="QTableWidget" name="lieuxTable">
+           <column>
+            <property name="text">
+             <string>id</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>value</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>type</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>categorieId</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>createdAt</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>updatedAt</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Categorie</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="addLieuxButton">
+           <property name="text">
+            <string>Ajouter lieu</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="editLieuxButton">
+           <property name="text">
+            <string>Modifier lieu</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="deleteLieuxButton">
+           <property name="text">
+            <string>Supprimer lieu</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
        <widget class="QWidget" name="pageFragments">
-        <layout class="QVBoxLayout" name="verticalLayout_fragments"/>
+        <layout class="QVBoxLayout" name="verticalLayout_fragments">
+         <item>
+          <widget class="QTableWidget" name="fragmentsTable">
+           <column>
+            <property name="text">
+             <string>id</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>texte</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>appliesTo</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>genre</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>minNameLength</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>maxNameLength</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>cultureId</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>categorieId</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>createdAt</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>updatedAt</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Categorie</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Culture</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="addFragmentsButton">
+           <property name="text">
+            <string>Ajouter Fragments Histoire</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="editFragmentsButton">
+           <property name="text">
+            <string>Modifier Fragments Histoire</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="deleteFragmentsButton">
+           <property name="text">
+            <string>Supprimer Fragments Histoire</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
        <widget class="QWidget" name="pageConcepts">
-        <layout class="QVBoxLayout" name="verticalLayout_concepts"/>
+        <layout class="QVBoxLayout" name="verticalLayout_concepts">
+         <item>
+          <widget class="QTableWidget" name="conceptsTable">
+           <column>
+            <property name="text">
+             <string>id</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>valeur</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>type</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>mood</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>keywords</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>categorieId</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>createdAt</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="addConceptsButton">
+           <property name="text">
+            <string>Ajouter Concept</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="editConceptsButton">
+           <property name="text">
+            <string>Modifier Concept</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="deleteConceptsButton">
+           <property name="text">
+            <string>Supprimer Concept</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </widget>
      </item>

@@ -74,8 +74,6 @@ QHeaderView::section {
   border-radius: 0px;
 }
 
-
-
 QPushButton {
   background: qlineargradient(x1:0 y1:0 x2:1 y2:0, stop:0 #34d399, stop:1 #2563eb); /* vert-menthe -> bleu-profond */
   color: #fff;         /* blanc-pur */
@@ -85,6 +83,7 @@ QPushButton {
   font-weight: 600;
   margin: 2px;
 }
+
 QPushButton:hover {
   background: #fbbf24; /* jaune-doré */
   color: #1f2937;      /* gris-foncé */

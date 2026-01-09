@@ -322,13 +322,6 @@
        <widget class="QWidget" name="pageCategories">
         <layout class="QVBoxLayout" name="verticalLayout_categories">
          <item>
-          <widget class="QPushButton" name="addCategoriesButton">
-           <property name="text">
-            <string> Ajouter Catégorie</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QTableWidget" name="categoriesTable">
            <row>
             <property name="text">
@@ -398,9 +391,12 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="deleteCategoriesButton">
+          <widget class="QPushButton" name="addCategoriesButton">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
            <property name="text">
-            <string>Supprimer Catégorie</string>
+            <string> Ajouter Catégorie</string>
            </property>
           </widget>
          </item>
@@ -408,6 +404,13 @@
           <widget class="QPushButton" name="editCategoriesButton">
            <property name="text">
             <string>Modifier Catégorie</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="deleteCategoriesButton">
+           <property name="text">
+            <string>Supprimer Catégorie</string>
            </property>
           </widget>
          </item>

@@ -70,7 +70,7 @@ class UserManager(QtWidgets.QWidget):
 class UserDialog(QtWidgets.QDialog):
     def __init__(self, parent=None, username="", email="", role="Editor", isActive=True):
         super().__init__(parent)
-        self.setWindowTitle("Utilisateur")
+        self.setWindowTitle("Gestion d'utilisateur")
         layout = QtWidgets.QFormLayout()
         self.username_input = QtWidgets.QLineEdit(username)
         self.password_input = QtWidgets.QLineEdit()
@@ -100,6 +100,21 @@ class UserDialog(QtWidgets.QDialog):
             self.role_input.currentText(),
             self.active_input.isChecked()
         )
+        
+    def validate_inputs(self):
+        if not self.username_input.text().strip():
+            return "Le nom d'utilisateur ne peut pas être vide."
+        if not self.email_input.text().strip():
+            return "L'email est obligatoire."
+        return None
+
+    def accept(self):
+        error = self.validate_inputs()
+        if error:
+            QtWidgets.QMessageBox.warning(self, "Validation", error)
+        else:
+            super().accept()
+
 
 if __name__ == "__main__":
     import sys

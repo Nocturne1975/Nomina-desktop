@@ -7,7 +7,7 @@ class LoginDialog(QtWidgets.QDialog):
         self.setWindowTitle("Connexion")
         self.setFixedSize(300, 150)
 
-        layout = QtWidgets.QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout(self)
 
         self.username_input = QtWidgets.QLineEdit()
         self.username_input.setPlaceholderText("Nom d'utilisateur")
@@ -23,13 +23,16 @@ class LoginDialog(QtWidgets.QDialog):
         layout.addWidget(self.login_button)
 
         self.error_label = QtWidgets.QLabel("")
+        self.error_label.setStyleSheet("color: red;")
         layout.addWidget(self.error_label)
 
-        self.setLayout(layout)
-
     def handle_login(self):
-        username = self.username_input.text()
-        password = self.password_input.text()
+        username = self.username_input.text().strip()
+        password = self.password_input.text().strip()
+        if not username or not password:
+            self.error_label.setText("Les champs sont obligatoires.")
+            return
+
         if check_user_credentials(username, password):
             self.accept()
         else:

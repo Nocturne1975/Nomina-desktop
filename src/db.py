@@ -1,6 +1,6 @@
-
 import psycopg2
 from psycopg2 import sql, OperationalError
+import bcrypt
 
 # --- CONFIGURATION DE LA BASE DE DONNÉES ---
 DB_HOST = 'ep-royal-dew-ad4wqma8-pooler.c-2.us-east-1.aws.neon.tech'
@@ -19,7 +19,6 @@ def get_connection():
         password=DB_PASSWORD,
         sslmode=SSLMODE
     )
-
 
 # --- UTILITAIRE POUR LES TRANSACTIONS SIMPLES ---
 def execute_query(query, params=None, fetch=False):
@@ -335,41 +334,39 @@ def delete_culture(id):
     
 # --- CRUD POUR NOMPERSONNAGE ---
 
-def get_all_nom_personnages():
+def get_all_noms_personnages():
     """
-    Récupérer tous les noms de personnages et leurs relations avec Culture et Categorie.
+    Récupérer tous les noms de personnages et leurs relations avec Categorie.
     """
     query = '''
-        SELECT NP.id, NP.valeur, NP.genre, NP."categorieId", CA.name AS categorie_name,
-               NP."cultureId", CU.name AS culture_name, NP."createdAt", NP."updatedAt"
+        SELECT NP.id, NP.valeur, NP."categorieId", CA.name, NP."createdAt", NP."updatedAt"
         FROM "NomPersonnage" NP
         LEFT JOIN "Categorie" CA ON NP."categorieId" = CA.id
-        LEFT JOIN "Culture" CU ON NP."cultureId" = CU.id
     '''
     return execute_query(query, fetch=True)
 
 
-def insert_nom_personnage(valeur, genre, categorie_id, culture_id):
+def insert_nom_personnage(nom, categorie_id):
     """
-    Ajouter un nouveau nom de personnage.
+    Ajouter un nouveau nom de personnage (version simple, sans genre ni culture).
     """
     query = '''
-        INSERT INTO "NomPersonnage" (valeur, genre, "categorieId", "cultureId")
-        VALUES (%s, %s, %s, %s)
+        INSERT INTO "NomPersonnage" (valeur, "categorieId")
+        VALUES (%s, %s)
     '''
-    execute_query(query, params=(valeur, genre, categorie_id, culture_id))
+    execute_query(query, params=(nom, categorie_id))
 
 
-def update_nom_personnage(id, valeur, genre, categorie_id, culture_id):
+def update_nom_personnage(id, nom, categorie_id):
     """
-    Mettre à jour un nom de personnage existant.
+    Mettre à jour un nom de personnage existant (version simple, sans genre ni culture).
     """
     query = '''
         UPDATE "NomPersonnage"
-        SET valeur=%s, genre=%s, "categorieId"=%s, "cultureId"=%s
+        SET valeur=%s, "categorieId"=%s
         WHERE id=%s
     '''
-    execute_query(query, params=(valeur, genre, categorie_id, culture_id, id))
+    execute_query(query, params=(nom, categorie_id, id))
 
 
 def delete_nom_personnage(id):
@@ -379,12 +376,20 @@ def delete_nom_personnage(id):
     query = 'DELETE FROM "NomPersonnage" WHERE id=%s'
     execute_query(query, params=(id,))
     
+
+    
 # --- AUTHENTIFICATION UTILISATEUR ---
+import bcrypt
+
 def check_user_credentials(username, password):
     """
-    Vérifie si les identifiants utilisateur sont valides.
-    Retourne l'utilisateur si trouvé, sinon None.
+    Vérifie l'identifiant et le mot de passe. Le mot de passe est comparé en utilisant bcrypt.
     """
-    query = 'SELECT id, username, password, email, role FROM "User" WHERE username=%s AND password=%s'
-    result = execute_query(query, params=(username, password), fetch=True)
-    return result[0] if result else None
+    query = 'SELECT id, username, password, email, role FROM "User" WHERE username=%s'
+    result = execute_query(query, params=(username,), fetch=True)
+    try:
+        if result and bcrypt.checkpw(password.encode(), result[0][2].encode()):
+            return result[0]
+    except ValueError:
+        pass
+    return None

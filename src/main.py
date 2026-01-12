@@ -1,3 +1,4 @@
+from pathlib import Path
 from PyQt6 import QtWidgets, uic, QtCore
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QAbstractScrollArea
@@ -13,44 +14,70 @@ from db import (
 class NominaWindow(QtWidgets.QMainWindow):       
     def __init__(self):
         super().__init__()
-        uic.loadUi("ui/nomina_main.ui", self)
+        base_dir = Path(__file__).resolve().parent.parent
+        ui_path = base_dir / "ui" / "nomina_main.ui"
+        uic.loadUi(str(ui_path), self)
+        self.setup_navigation()
+        # Vérification des attributs attendus
+        expected_tables = [
+            "tableCategories", "tableCultures", "tableUsers", "tableTitres",
+            "tableFragments", "tableConcepts", "tableLieux", "tableNomsPersonnages"
+        ]
+        missing = [name for name in expected_tables if not hasattr(self, name)]
+        if missing:
+            print("[DEBUG] Attributs manquants après chargement du .ui :", missing)
+        else:
+            print("[DEBUG] Tous les attributs de table sont présents.")
         self.setup_tables()
         self.setup_crud_buttons()
         self.setup_titres_buttons()
         self.setup_fragments_buttons()
         self.setup_concepts_buttons()
         self.setup_lieux_buttons()
+        self.setup_noms_personnages_buttons()
         self.load_data()
         self.stackedWidget.setCurrentIndex(0)
+
+    def setup_navigation(self):
+        self.btnUsers.clicked.connect(lambda: self.stackedWidget.setCurrentWidget(self.pageUsers))
+        self.btnCultures.clicked.connect(lambda: self.stackedWidget.setCurrentWidget(self.pageCultures))
+        self.btnConcepts.clicked.connect(lambda: self.stackedWidget.setCurrentWidget(self.pageConcepts))
+        self.btnFragments.clicked.connect(lambda: self.stackedWidget.setCurrentWidget(self.pageFragments))
+        self.btnCategories.clicked.connect(lambda: self.stackedWidget.setCurrentWidget(self.pageCategories))
+        self.btnNomsPersonnages.clicked.connect(lambda: self.stackedWidget.setCurrentWidget(self.pageNomsPersonnages))
+        self.btnLieux.clicked.connect(lambda: self.stackedWidget.setCurrentWidget(self.pageLieux))
+        self.btnTitres.clicked.connect(lambda: self.stackedWidget.setCurrentWidget(self.pageTitres))  
+
 
     def setup_tables(self):
         """Configurer les propriétés des tableaux."""
         self.all_tables = [
-            self.categoriesTable,
-            self.culturesTable,
-            self.usersTable,
-            self.titresTable,
-            self.fragmentsTable,
-            self.conceptsTable,
-            self.lieuxTable,
+            self.tableCategories,        # Catégories
+            self.tableCultures,         # Cultures
+            self.tableUsers,             # Utilisateurs
+            self.tableTitres,            # Titres
+            self.tableFragments,         # Fragments
+            self.tableConcepts,          # Concepts
+            self.tableLieux,             # Lieux
+            self.tableNomsPersonnages    # Noms Personnages
         ]
     def setup_fragments_buttons(self):
-        self.addFragmentsButton.clicked.connect(self.ajouter_fragment)
-        self.editFragmentsButton.clicked.connect(self.modifier_fragment)
-        self.deleteFragmentsButton.clicked.connect(self.supprimer_fragment)
-        self.fragmentsTable.cellDoubleClicked.connect(self.modifier_fragment)
+        self.btnAjouterFragment.clicked.connect(self.ajouter_fragment)
+        self.btnModifierFragment.clicked.connect(self.modifier_fragment)
+        self.btnSupprimerFragment.clicked.connect(self.supprimer_fragment)
+        self.tableFragments.cellDoubleClicked.connect(self.modifier_fragment)
 
     def setup_concepts_buttons(self):
-        self.addConceptsButton.clicked.connect(self.ajouter_concept)
-        self.editConceptsButton.clicked.connect(self.modifier_concept)
-        self.deleteConceptsButton.clicked.connect(self.supprimer_concept)
-        self.conceptsTable.cellDoubleClicked.connect(self.modifier_concept)
+        self.btnAjouterConcept.clicked.connect(self.ajouter_concept)
+        self.btnModifierConcept.clicked.connect(self.modifier_concept)
+        self.btnSupprimerConcept.clicked.connect(self.supprimer_concept)
+        self.tableConcepts.cellDoubleClicked.connect(self.modifier_concept)
 
     def setup_lieux_buttons(self):
-        self.addLieuxButton.clicked.connect(self.ajouter_lieu)
-        self.editLieuxButton.clicked.connect(self.modifier_lieu)
-        self.deleteLieuxButton.clicked.connect(self.supprimer_lieu)
-        self.lieuxTable.cellDoubleClicked.connect(self.modifier_lieu)
+        self.btnAjouterLieux.clicked.connect(self.ajouter_lieu)
+        self.btnModifierLieux.clicked.connect(self.modifier_lieu)
+        self.btnSupprimerLieux.clicked.connect(self.supprimer_lieu)
+        self.tableLieux.cellDoubleClicked.connect(self.modifier_lieu)
 
         for table in self.all_tables:
             table.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy(1))  # AlwaysOn
@@ -62,26 +89,26 @@ class NominaWindow(QtWidgets.QMainWindow):
     def setup_crud_buttons(self):
         """Configurer les boutons CRUD pour chaque section."""
         # CRUD pour les catégories
-        self.addCategoriesButton.clicked.connect(self.ajouter_categorie)
-        self.editCategoriesButton.clicked.connect(self.modifier_categorie)
-        self.deleteCategoriesButton.clicked.connect(self.supprimer_categorie)
+        self.btnAjouterCategorie.clicked.connect(self.ajouter_categorie)
+        self.btnModifierCategorie.clicked.connect(self.modifier_categorie)
+        self.btnSupprimerCategorie.clicked.connect(self.supprimer_categorie)
 
         # CRUD pour cultures
-        self.addCulturesButton.clicked.connect(self.ajouter_culture)
-        self.editCulturesButton.clicked.connect(self.modifier_culture)
-        self.deleteCulturesButton.clicked.connect(self.supprimer_culture)
+        self.btnAjouterCulture.clicked.connect(self.ajouter_culture)
+        self.btnModifierCulture.clicked.connect(self.modifier_culture)
+        self.btnSupprimerCulture.clicked.connect(self.supprimer_culture)
 
         # CRUD pour utilisateurs
-        self.addUserButton.clicked.connect(self.ajouter_user)
-        self.editUserButton.clicked.connect(self.modifier_user)
-        self.deleteUserButton.clicked.connect(self.supprimer_user)
+        self.btnAjouterUsers.clicked.connect(self.ajouter_user)
+        self.btnModifierUsers.clicked.connect(self.modifier_user)
+        self.btnSupprimerUsers.clicked.connect(self.supprimer_user)
 
     def setup_titres_buttons(self):
         """Connecter les boutons CRUD pour Titres."""
-        self.addTitresButton.clicked.connect(self.ajouter_titre)
-        self.editTitresButton.clicked.connect(self.modifier_titre)
-        self.deleteTitresButton.clicked.connect(self.supprimer_titre)
-        self.titresTable.cellDoubleClicked.connect(self.modifier_titre)
+        self.btnAjouterTitres.clicked.connect(self.ajouter_titre)
+        self.btnModifierTitres.clicked.connect(self.modifier_titre)
+        self.btnSupprimerTitres.clicked.connect(self.supprimer_titre)
+        self.tableTitres.cellDoubleClicked.connect(self.modifier_titre)
         
     def load_data(self):
         """Charger toutes les données des tables dans l'interface."""
@@ -92,14 +119,21 @@ class NominaWindow(QtWidgets.QMainWindow):
         self.load_fragments()
         self.load_concepts()
         self.load_lieux()
-        
-        # CRUD pour Fragments
+        self.load_noms_personnages()
+
+    def setup_noms_personnages_buttons(self):
+        self.btnAjouterNom.clicked.connect(self.ajouter_nom_personnage)
+        self.btnModifierNom.clicked.connect(self.modifier_nom_personnage)
+        self.btnSupprimerNom.clicked.connect(self.supprimer_nom_personnage)
+        self.tableNomsPersonnages.cellDoubleClicked.connect(self.modifier_nom_personnage)
+
     def load_fragments(self):
         rows = get_all_fragments()
-        self.fragmentsTable.setRowCount(len(rows))
+        self.tableFragments.setRowCount(len(rows))
         for row_idx, row_data in enumerate(rows):
             for col_idx, value in enumerate(row_data):
-                self.fragmentsTable.setItem(row_idx, col_idx, QtWidgets.QTableWidgetItem(str(value)))
+                self.tableFragments.setItem(row_idx, col_idx, QtWidgets.QTableWidgetItem(str(value)))
+                
     def ajouter_fragment(self):
         dialog = QtWidgets.QDialog(self)
         dialog.setWindowTitle("Ajouter un fragment")
@@ -128,19 +162,19 @@ class NominaWindow(QtWidgets.QMainWindow):
         self.load_fragments()
         dialog.accept()
 
-    def modifier_fragment(self):
-        row = self.fragmentsTable.currentRow()
+    def modifier_fragment(self, *_):
+        row = self.tableFragments.currentRow()
         if row < 0:
             QtWidgets.QMessageBox.warning(self, "Erreur", "Sélectionnez un fragment à modifier.")
             return
-        id_ = self.fragmentsTable.item(row, 0).text()
-        old_texte = self.fragmentsTable.item(row, 1).text()
-        old_applies_to = self.fragmentsTable.item(row, 2).text()
-        old_genre = self.fragmentsTable.item(row, 3).text()
-        old_min_name_length = self.fragmentsTable.item(row, 4).text()
-        old_max_name_length = self.fragmentsTable.item(row, 5).text()
-        old_culture_id = self.fragmentsTable.item(row, 6).text()
-        old_categorie_id = self.fragmentsTable.item(row, 8).text()
+        id_ = self.tableFragments.item(row, 0).text()
+        old_texte = self.tableFragments.item(row, 1).text()
+        old_applies_to = self.tableFragments.item(row, 2).text()
+        old_genre = self.tableFragments.item(row, 3).text()
+        old_min_name_length = self.tableFragments.item(row, 4).text()
+        old_max_name_length = self.tableFragments.item(row, 5).text()
+        old_culture_id = self.tableFragments.item(row, 6).text()
+        old_categorie_id = self.tableFragments.item(row, 7).text()
         dialog = QtWidgets.QDialog(self)
         dialog.setWindowTitle("Modifier fragment")
         layout = QtWidgets.QFormLayout(dialog)
@@ -169,11 +203,11 @@ class NominaWindow(QtWidgets.QMainWindow):
         dialog.accept()
 
     def supprimer_fragment(self):
-        row = self.fragmentsTable.currentRow()
+        row = self.tableFragments.currentRow()
         if row < 0:
             QtWidgets.QMessageBox.warning(self, "Erreur", "Sélectionnez un fragment à supprimer.")
             return
-        id_ = self.fragmentsTable.item(row, 0).text()
+        id_ = self.tableFragments.item(row, 0).text()
         reply = QtWidgets.QMessageBox.question(
             self, "Confirmation", f"Supprimer le fragment {id_} ?", 
             QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No
@@ -185,10 +219,10 @@ class NominaWindow(QtWidgets.QMainWindow):
             # CRUD pour Concepts
     def load_concepts(self):
         rows = get_all_concepts()
-        self.conceptsTable.setRowCount(len(rows))
+        self.tableConcepts.setRowCount(len(rows))
         for row_idx, row_data in enumerate(rows):
             for col_idx, value in enumerate(row_data):
-                self.conceptsTable.setItem(row_idx, col_idx, QtWidgets.QTableWidgetItem(str(value)))
+                self.tableConcepts.setItem(row_idx, col_idx, QtWidgets.QTableWidgetItem(str(value)))
                 
     def ajouter_concept(self):
         dialog = QtWidgets.QDialog(self)
@@ -214,17 +248,17 @@ class NominaWindow(QtWidgets.QMainWindow):
         self.load_concepts()
         dialog.accept()
 
-    def modifier_concept(self):
-        row = self.conceptsTable.currentRow()
+    def modifier_concept(self, *_):
+        row = self.tableConcepts.currentRow()
         if row < 0:
             QtWidgets.QMessageBox.warning(self, "Erreur", "Sélectionnez un concept à modifier.")
             return
-        id_ = self.conceptsTable.item(row, 0).text()
-        old_valeur = self.conceptsTable.item(row, 1).text()
-        old_type = self.conceptsTable.item(row, 2).text()
-        old_mood = self.conceptsTable.item(row, 3).text()
-        old_keywords = self.conceptsTable.item(row, 4).text()
-        old_categorie_id = self.conceptsTable.item(row, 5).text()
+        id_ = self.tableConcepts.item(row, 0).text()
+        old_valeur = self.tableConcepts.item(row, 1).text()
+        old_type = self.tableConcepts.item(row, 2).text()
+        old_mood = self.tableConcepts.item(row, 3).text()
+        old_keywords = self.tableConcepts.item(row, 4).text()
+        old_categorie_id = self.tableConcepts.item(row, 5).text()
         dialog = QtWidgets.QDialog(self)
         dialog.setWindowTitle("Modifier concept")
         layout = QtWidgets.QFormLayout(dialog)
@@ -249,11 +283,11 @@ class NominaWindow(QtWidgets.QMainWindow):
         dialog.accept()
         
     def supprimer_concept(self):
-        row = self.conceptsTable.currentRow()
+        row = self.tableConcepts.currentRow()
         if row < 0:
             QtWidgets.QMessageBox.warning(self, "Erreur", "Sélectionnez un concept à supprimer.")
             return
-        id_ = self.conceptsTable.item(row, 0).text()
+        id_ = self.tableConcepts.item(row, 0).text()
         reply = QtWidgets.QMessageBox.question(
             self, "Confirmation", f"Supprimer le concept {id_} ?", 
             QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No
@@ -265,10 +299,10 @@ class NominaWindow(QtWidgets.QMainWindow):
         # CRUD pour Lieux
     def load_lieux(self):
         rows = get_all_lieux()
-        self.lieuxTable.setRowCount(len(rows))
+        self.tableLieux.setRowCount(len(rows))
         for row_idx, row_data in enumerate(rows):
             for col_idx, value in enumerate(row_data):
-                self.lieuxTable.setItem(row_idx, col_idx, QtWidgets.QTableWidgetItem(str(value)))
+                self.tableLieux.setItem(row_idx, col_idx, QtWidgets.QTableWidgetItem(str(value)))
                 
     def ajouter_lieu(self):
         dialog = QtWidgets.QDialog(self)
@@ -290,15 +324,15 @@ class NominaWindow(QtWidgets.QMainWindow):
         self.load_lieux()
         dialog.accept()
 
-    def modifier_lieu(self):
-        row = self.lieuxTable.currentRow()
+    def modifier_lieu(self, *_):
+        row = self.tableLieux.currentRow()
         if row < 0:
             QtWidgets.QMessageBox.warning(self, "Erreur", "Sélectionnez un lieu à modifier.")
             return
-        id_ = self.lieuxTable.item(row, 0).text()
-        old_value = self.lieuxTable.item(row, 1).text()
-        old_type = self.lieuxTable.item(row, 2).text()
-        old_categorie_id = self.lieuxTable.item(row, 3).text()
+        id_ = self.tableLieux.item(row, 0).text()
+        old_value = self.tableLieux.item(row, 1).text()
+        old_type = self.tableLieux.item(row, 2).text()
+        old_categorie_id = self.tableLieux.item(row, 3).text()
         dialog = QtWidgets.QDialog(self)
         dialog.setWindowTitle("Modifier lieu")
         layout = QtWidgets.QFormLayout(dialog)
@@ -319,11 +353,11 @@ class NominaWindow(QtWidgets.QMainWindow):
         dialog.accept()
 
     def supprimer_lieu(self):
-        row = self.lieuxTable.currentRow()
+        row = self.tableLieux.currentRow()
         if row < 0:
             QtWidgets.QMessageBox.warning(self, "Erreur", "Sélectionnez un lieu à supprimer.")
             return
-        id_ = self.lieuxTable.item(row, 0).text()
+        id_ = self.tableLieux.item(row, 0).text()
         reply = QtWidgets.QMessageBox.question(
             self, "Confirmation", f"Supprimer le lieu {id_} ?", 
             QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No
@@ -336,10 +370,10 @@ class NominaWindow(QtWidgets.QMainWindow):
     def load_titres(self):
         """Charger les titres dans la table dédiée."""
         rows = get_all_titres()
-        self.titresTable.setRowCount(len(rows))
+        self.tableTitres.setRowCount(len(rows))
         for row_idx, row_data in enumerate(rows):
             for col_idx, value in enumerate(row_data):
-                self.titresTable.setItem(row_idx, col_idx, QtWidgets.QTableWidgetItem(str(value)))
+                self.tableTitres.setItem(row_idx, col_idx, QtWidgets.QTableWidgetItem(str(value)))
 
     def ajouter_titre(self):
         dialog = QtWidgets.QDialog(self)
@@ -367,18 +401,18 @@ class NominaWindow(QtWidgets.QMainWindow):
         self.load_titres()
         dialog.accept()
 
-    def modifier_titre(self):
-        row = self.titresTable.currentRow()
+    def modifier_titre(self, *_):
+        row = self.tableTitres.currentRow()
         if row < 0:
             QtWidgets.QMessageBox.warning(self, "Erreur", "Sélectionnez un titre à modifier.")
             return
 
-        id_ = self.titresTable.item(row, 0).text()
-        old_valeur = self.titresTable.item(row, 1).text()
-        old_type = self.titresTable.item(row, 2).text()
-        old_genre = self.titresTable.item(row, 3).text()
-        old_culture_id = self.titresTable.item(row, 4).text()
-        old_categorie_id = self.titresTable.item(row, 6).text()
+        id_ = self.tableTitres.item(row, 0).text()
+        old_valeur = self.tableTitres.item(row, 1).text()
+        old_type = self.tableTitres.item(row, 2).text()
+        old_genre = self.tableTitres.item(row, 3).text()
+        old_culture_id = self.tableTitres.item(row, 4).text()
+        old_categorie_id = self.tableTitres.item(row, 6).text()
 
         dialog = QtWidgets.QDialog(self)
         dialog.setWindowTitle("Modifier titre")
@@ -406,12 +440,12 @@ class NominaWindow(QtWidgets.QMainWindow):
         dialog.accept()
 
     def supprimer_titre(self):
-        row = self.titresTable.currentRow()
+        row = self.tableTitres.currentRow()
         if row < 0:
             QtWidgets.QMessageBox.warning(self, "Erreur", "Sélectionnez un titre à supprimer.")
             return
 
-        id_ = self.titresTable.item(row, 0).text()
+        id_ = self.tableTitres.item(row, 0).text()
         reply = QtWidgets.QMessageBox.question(
             self, "Confirmation", f"Supprimer le titre {id_} ?", 
             QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No
@@ -424,10 +458,10 @@ class NominaWindow(QtWidgets.QMainWindow):
     def load_categories(self):
         print("Charger les données pour les catégories dans la table.")
         rows = get_all_categories()
-        self.categoriesTable.setRowCount(len(rows))
+        self.tableCategories.setRowCount(len(rows)) 
         for row_idx, row_data in enumerate(rows):
             for col_idx, value in enumerate(row_data):
-                self.categoriesTable.setItem(row_idx, col_idx, QtWidgets.QTableWidgetItem(str(value)))
+                self.tableCategories.setItem(row_idx, col_idx, QtWidgets.QTableWidgetItem(str(value)))
 
     def ajouter_categorie(self):
         """Ajouter une nouvelle catégorie."""
@@ -440,27 +474,30 @@ class NominaWindow(QtWidgets.QMainWindow):
         layout.addRow("Nom", name)
         layout.addRow("Description", description)
 
-        btn = QtWidgets.QPushButton("Ajouter")
-        layout.addWidget(btn)
+        btn = QtWidgets.QPushButton("Ajouter")        
         btn.clicked.connect(lambda: self._insert_categorie(dialog, name.text(), description.text()))
+        layout.addWidget(btn)
         dialog.exec()
 
-    def _insert_categorie(self, dialog, name, description):
-        """Insérer une catégorie dans la base de données."""
-        insert_categorie(name, description)
-        self.load_categories()
+    def validate_and_insert_categorie(self, dialog, name_input, description_input):
+        if not name_input.text().strip():
+            QtWidgets.QMessageBox.warning(self, "Erreur", "Le nom est obligatoire.")
+            return
+        insert_categorie(name_input.text(), description_input.text())
         dialog.accept()
+        self.load_categories()
+    
 
     def modifier_categorie(self):
         """Modifier une catégorie existante."""
-        row = self.categoriesTable.currentRow()
+        row = self.tableCategories.currentRow()
         if row < 0:
             QtWidgets.QMessageBox.warning(self, "Erreur", "Sélectionnez une catégorie à modifier.")
             return
 
-        id_ = self.categoriesTable.item(row, 0).text()
-        old_name = self.categoriesTable.item(row, 1).text()
-        old_description = self.categoriesTable.item(row, 2).text()
+        id_ = self.tableCategories.item(row, 0).text()
+        old_name = self.tableCategories.item(row, 1).text()
+        old_description = self.tableCategories.item(row, 2).text()
 
         dialog = QtWidgets.QDialog(self)
         dialog.setWindowTitle("Modifier catégorie")
@@ -484,12 +521,12 @@ class NominaWindow(QtWidgets.QMainWindow):
 
     def supprimer_categorie(self):
         """Supprimer une catégorie par ID."""
-        row = self.categoriesTable.currentRow()
+        row = self.tableCategories.currentRow()
         if row < 0:
             QtWidgets.QMessageBox.warning(self, "Erreur", "Sélectionnez une catégorie à supprimer.")
             return
 
-        id_ = self.categoriesTable.item(row, 0).text()
+        id_ = self.tableCategories.item(row, 0).text()
         reply = QtWidgets.QMessageBox.question(
             self, "Confirmation", f"Supprimer la catégorie {id_} ?", 
             QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No
@@ -502,10 +539,10 @@ class NominaWindow(QtWidgets.QMainWindow):
     def load_cultures(self):
         """Charger les cultures dans la table dédiée."""
         rows = get_all_cultures()
-        self.culturesTable.setRowCount(len(rows))
+        self.tableCultures.setRowCount(len(rows))
         for row_idx, row_data in enumerate(rows):
             for col_idx, value in enumerate(row_data):
-                self.culturesTable.setItem(row_idx, col_idx, QtWidgets.QTableWidgetItem(str(value)))
+                self.tableCultures.setItem(row_idx, col_idx, QtWidgets.QTableWidgetItem(str(value)))
 
     def ajouter_culture(self):
         """Ajouter une nouvelle culture."""
@@ -531,14 +568,14 @@ class NominaWindow(QtWidgets.QMainWindow):
 
     def modifier_culture(self):
         """Modifier une culture existante."""
-        row = self.culturesTable.currentRow()
+        row = self.tableCultures.currentRow()
         if row < 0:
             QtWidgets.QMessageBox.warning(self, "Erreur", "Sélectionnez une culture à modifier.")
             return
 
-        id_ = self.culturesTable.item(row, 0).text()
-        old_name = self.culturesTable.item(row, 1).text()
-        old_description = self.culturesTable.item(row, 2).text()
+        id_ = self.tableCultures.item(row, 0).text()
+        old_name = self.tableCultures.item(row, 1).text()
+        old_description = self.tableCultures.item(row, 2).text()
 
         dialog = QtWidgets.QDialog(self)
         dialog.setWindowTitle("Modifier culture")
@@ -562,12 +599,12 @@ class NominaWindow(QtWidgets.QMainWindow):
 
     def supprimer_culture(self):
         """Supprimer une culture."""
-        row = self.culturesTable.currentRow()
+        row = self.tableCultures.currentRow()
         if row < 0:
             QtWidgets.QMessageBox.warning(self, "Erreur", "Sélectionnez une culture à supprimer.")
             return
 
-        id_ = self.culturesTable.item(row, 0).text()
+        id_ = self.tableCultures.item(row, 0).text()
         reply = QtWidgets.QMessageBox.question(
             self, "Confirmation", f"Supprimer la culture {id_} ?", 
             QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No
@@ -580,10 +617,10 @@ class NominaWindow(QtWidgets.QMainWindow):
     def load_users(self):
         """Charger les utilisateurs dans la table dédiée."""
         rows = get_all_users()
-        self.usersTable.setRowCount(len(rows))
+        self.tableUsers.setRowCount(len(rows))
         for row_idx, row_data in enumerate(rows):
             for col_idx, value in enumerate(row_data):
-                self.usersTable.setItem(row_idx, col_idx, QtWidgets.QTableWidgetItem(str(value)))
+                self.tableUsers.setItem(row_idx, col_idx, QtWidgets.QTableWidgetItem(str(value)))
 
     def ajouter_user(self):
         """Ajouter un nouvel utilisateur via un formulaire."""
@@ -617,16 +654,16 @@ class NominaWindow(QtWidgets.QMainWindow):
 
     def modifier_user(self):
         """Modifier un utilisateur existant."""
-        row = self.usersTable.currentRow()
+        row = self.tableUsers.currentRow()
         if row < 0:
             QtWidgets.QMessageBox.warning(self, "Erreur", "Sélectionnez un utilisateur à modifier.")
             return
 
-        id_ = self.usersTable.item(row, 0).text()
-        old_username = self.usersTable.item(row, 1).text()
-        old_email = self.usersTable.item(row, 2).text()
-        old_role = self.usersTable.item(row, 3).text()
-        old_is_active = self.usersTable.item(row, 4).text()
+        id_ = self.tableUsers.item(row, 0).text()
+        old_username = self.tableUsers.item(row, 1).text()
+        old_email = self.tableUsers.item(row, 2).text()
+        old_role = self.tableUsers.item(row, 3).text()
+        old_is_active = self.tableUsers.item(row, 4).text()
 
         dialog = QtWidgets.QDialog(self)
         dialog.setWindowTitle("Modifier utilisateur")
@@ -656,12 +693,12 @@ class NominaWindow(QtWidgets.QMainWindow):
 
     def supprimer_user(self):
         """Supprimer un utilisateur existant."""
-        row = self.usersTable.currentRow()
+        row = self.tableUsers.currentRow()
         if row < 0:
             QtWidgets.QMessageBox.warning(self, "Erreur", "Sélectionnez un utilisateur à supprimer.")
             return
 
-        id_ = self.usersTable.item(row, 0).text()
+        id_ = self.tableUsers.item(row, 0).text()
 
         reply = QtWidgets.QMessageBox.question(
             self, "Confirmation", f"Supprimer l'utilisateur {id_} ?", 
@@ -671,13 +708,82 @@ class NominaWindow(QtWidgets.QMainWindow):
             delete_user(int(id_))
             self.load_users()
 
+    # CRUD pour Noms Personnages
+    def load_noms_personnages(self):
+        from db import get_all_noms_personnages  # À adapter selon votre db.py
+        rows = get_all_noms_personnages() if 'get_all_noms_personnages' in dir(__import__('db')) else []
+        self.tableNomsPersonnages.setRowCount(len(rows))
+        for row_idx, row_data in enumerate(rows):
+            for col_idx, value in enumerate(row_data):
+                self.tableNomsPersonnages.setItem(row_idx, col_idx, QtWidgets.QTableWidgetItem(str(value)))
+
+    def ajouter_nom_personnage(self):
+        dialog = QtWidgets.QDialog(self)
+        dialog.setWindowTitle("Ajouter un nom de personnage")
+        layout = QtWidgets.QFormLayout(dialog)
+        nom = QtWidgets.QLineEdit()
+        categorie_id = QtWidgets.QLineEdit()
+        layout.addRow("Nom", nom)
+        layout.addRow("Catégorie ID", categorie_id)
+        btn = QtWidgets.QPushButton("Ajouter")
+        layout.addWidget(btn)
+        btn.clicked.connect(lambda: self._insert_nom_personnage(dialog, nom.text(), categorie_id.text()))
+        dialog.exec()
+
+    def _insert_nom_personnage(self, dialog, nom, categorie_id):
+        from db import insert_nom_personnage  # À adapter selon votre db.py
+        insert_nom_personnage(nom, categorie_id)
+        self.load_noms_personnages()
+        dialog.accept()
+
+    def modifier_nom_personnage(self, *_):
+        row = self.tableNomsPersonnages.currentRow()
+        if row < 0:
+            QtWidgets.QMessageBox.warning(self, "Erreur", "Sélectionnez un nom à modifier.")
+            return
+        id_ = self.tableNomsPersonnages.item(row, 0).text()
+        old_nom = self.tableNomsPersonnages.item(row, 1).text()
+        old_categorie_id = self.tableNomsPersonnages.item(row, 2).text()
+        dialog = QtWidgets.QDialog(self)
+        dialog.setWindowTitle("Modifier nom de personnage")
+        layout = QtWidgets.QFormLayout(dialog)
+        nom = QtWidgets.QLineEdit(old_nom)
+        categorie_id = QtWidgets.QLineEdit(old_categorie_id)
+        layout.addRow("Nom", nom)
+        layout.addRow("Catégorie ID", categorie_id)
+        btn = QtWidgets.QPushButton("Modifier")
+        layout.addWidget(btn)
+        btn.clicked.connect(lambda: self._update_nom_personnage(dialog, id_, nom.text(), categorie_id.text()))
+        dialog.exec()
+
+    def _update_nom_personnage(self, dialog, id_, nom, categorie_id):
+        from db import update_nom_personnage  # À adapter selon votre db.py
+        update_nom_personnage(id_, nom, categorie_id)
+        self.load_noms_personnages()
+        dialog.accept()
+
+    def supprimer_nom_personnage(self):
+        row = self.tableNomsPersonnages.currentRow()
+        if row < 0:
+            QtWidgets.QMessageBox.warning(self, "Erreur", "Sélectionnez un nom à supprimer.")
+            return
+        id_ = self.tableNomsPersonnages.item(row, 0).text()
+        reply = QtWidgets.QMessageBox.question(
+            self, "Confirmation", f"Supprimer le nom {id_} ?",
+            QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No
+        )
+        if reply == QtWidgets.QMessageBox.StandardButton.Yes:
+            from db import delete_nom_personnage  # À adapter selon votre db.py
+            delete_nom_personnage(id_)
+            self.load_noms_personnages()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
 
     try:
-        with open("styles/index.qss", "r") as f:
-              app.setStyleSheet(f.read())        
+        qss_path = Path(__file__).resolve().parent.parent / "styles" / "index.qss"
+        with open(qss_path, "r", encoding="utf-8") as f:
+            app.setStyleSheet(f.read())
     except FileNotFoundError:
         print("Style non appliqué. Fichier index.qss introuvable.")
 
@@ -687,4 +793,5 @@ if __name__ == "__main__":
         main_window.show()
         sys.exit(app.exec())
     else:
+
         sys.exit(0)

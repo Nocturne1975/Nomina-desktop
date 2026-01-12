@@ -31,7 +31,7 @@ Nomina-desktop est une application graphique permettant de générer des noms (p
 - **Langage** : Python 3.10+
 - **Framework GUI** : PyQt6
 - **UI** : Fichiers .ui (Qt Designer)
-- **Styles** : CSS (styles.qss)
+- **Styles** : Qt Style Sheets (QSS) (nomina.qss)
 - **Organisation** : MVC simplifié (src/, ui/, assets/, styles/)
 
 ---
@@ -64,7 +64,7 @@ python src/main.py
 
 - `src/` : code source principal (main.py, logique, contrôleurs)
 - `ui/` : fichiers d’interface graphique générés avec Qt Designer (`nomina_main.ui`)
-- `styles/` : fichiers de styles (`styles.qss`, `index.css`)
+- `styles/` : fichiers de styles (`nomina.qss`)
 - `assets/` : images, icônes, ressources graphiques
 - `requirements.txt` : dépendances Python
 

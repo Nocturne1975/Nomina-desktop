@@ -842,11 +842,11 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
 
     try:
-        qss_path = Path(__file__).resolve().parent.parent / "styles" / "index.qss"
+        qss_path = Path(__file__).resolve().parent.parent / "styles" / "nomina.qss"
         with open(qss_path, "r", encoding="utf-8") as f:
             app.setStyleSheet(f.read())
     except FileNotFoundError:
-        print("Style non appliqué. Fichier index.qss introuvable.")
+        print("Style non appliqué. Fichier nomina.qss introuvable.")
 
     login = LoginDialog()
     if login.exec() == QtWidgets.QDialog.DialogCode.Accepted:

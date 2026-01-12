@@ -35,11 +35,21 @@ def execute_query(query, params=None, fetch=False):
                 cur.execute(query, params)
                 if fetch:  # Retourner les résultats pour les requêtes SELECT
                     return cur.fetchall()
+                return cur.rowcount
     except OperationalError as e:
         print(f"Erreur de connexion à la base de données : {e}")
     except psycopg2.Error as e:
         print(f"Erreur SQL : {e}")
     return None
+
+
+def _to_int_or_none(value):
+    if value is None:
+        return None
+    value = str(value).strip()
+    if value == "":
+        return None
+    return int(value)
 
 
 # --- CRUD POUR LES CATEGORIES ---
@@ -130,21 +140,25 @@ def get_all_titres():
 
 def insert_titre(valeur, type_field, genre, culture_id, categorie_id):
     """Ajouter un nouveau titre."""
+    culture_id = _to_int_or_none(culture_id)
+    categorie_id = _to_int_or_none(categorie_id)
     query = '''
         INSERT INTO "Titre" (valeur, type, genre, "cultureId", "categorieId")
         VALUES (%s, %s, %s, %s, %s)
     '''
-    execute_query(query, params=(valeur, type_field, genre, culture_id, categorie_id))
+    return execute_query(query, params=(valeur, type_field, genre, culture_id, categorie_id))
 
 
 def update_titre(id, valeur, type_field, genre, culture_id, categorie_id):
     """Mettre à jour un titre existant."""
+    culture_id = _to_int_or_none(culture_id)
+    categorie_id = _to_int_or_none(categorie_id)
     query = '''
         UPDATE "Titre"
         SET valeur=%s, type=%s, genre=%s, "cultureId"=%s, "categorieId"=%s
         WHERE id=%s
     '''
-    execute_query(query, params=(valeur, type_field, genre, culture_id, categorie_id, id))
+    return execute_query(query, params=(valeur, type_field, genre, culture_id, categorie_id, id))
 
 
 def delete_titre(id):

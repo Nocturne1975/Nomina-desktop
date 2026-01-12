@@ -46,7 +46,11 @@ class NominaWindow(QtWidgets.QMainWindow):
         self.btnCategories.clicked.connect(lambda: self.stackedWidget.setCurrentWidget(self.pageCategories))
         self.btnNomsPersonnages.clicked.connect(lambda: self.stackedWidget.setCurrentWidget(self.pageNomsPersonnages))
         self.btnLieux.clicked.connect(lambda: self.stackedWidget.setCurrentWidget(self.pageLieux))
-        self.btnTitres.clicked.connect(lambda: self.stackedWidget.setCurrentWidget(self.pageTitres))  
+        self.btnTitres.clicked.connect(self.show_titres_page)
+
+    def show_titres_page(self):
+        self.stackedWidget.setCurrentWidget(self.pageTitres)
+        self.load_titres()
 
 
     def setup_tables(self):
@@ -129,6 +133,11 @@ class NominaWindow(QtWidgets.QMainWindow):
 
     def load_fragments(self):
         rows = get_all_fragments()
+        self.tableFragments.setColumnCount(12)
+        self.tableFragments.setHorizontalHeaderLabels([
+            "ID", "Texte", "Applies To", "Genre", "Min Name Length", "Max Name Length",
+            "Culture ID", "Culture", "Catégorie ID", "Catégorie", "Créé le", "Modifié le"
+        ])
         self.tableFragments.setRowCount(len(rows))
         for row_idx, row_data in enumerate(rows):
             for col_idx, value in enumerate(row_data):
@@ -174,7 +183,8 @@ class NominaWindow(QtWidgets.QMainWindow):
         old_min_name_length = self.tableFragments.item(row, 4).text()
         old_max_name_length = self.tableFragments.item(row, 5).text()
         old_culture_id = self.tableFragments.item(row, 6).text()
-        old_categorie_id = self.tableFragments.item(row, 7).text()
+        # get_all_fragments() renvoie: ... cultureId(6), cultureName(7), categorieId(8), categorieName(9)
+        old_categorie_id = self.tableFragments.item(row, 8).text()
         dialog = QtWidgets.QDialog(self)
         dialog.setWindowTitle("Modifier fragment")
         layout = QtWidgets.QFormLayout(dialog)
@@ -219,6 +229,11 @@ class NominaWindow(QtWidgets.QMainWindow):
             # CRUD pour Concepts
     def load_concepts(self):
         rows = get_all_concepts()
+        self.tableConcepts.setColumnCount(9)
+        self.tableConcepts.setHorizontalHeaderLabels([
+            "ID", "Valeur", "Type", "Mood", "Keywords",
+            "Catégorie ID", "Catégorie", "Créé le", "Modifié le"
+        ])
         self.tableConcepts.setRowCount(len(rows))
         for row_idx, row_data in enumerate(rows):
             for col_idx, value in enumerate(row_data):
@@ -299,6 +314,10 @@ class NominaWindow(QtWidgets.QMainWindow):
         # CRUD pour Lieux
     def load_lieux(self):
         rows = get_all_lieux()
+        self.tableLieux.setColumnCount(7)
+        self.tableLieux.setHorizontalHeaderLabels([
+            "ID", "Value", "Type", "Catégorie ID", "Catégorie", "Créé le", "Modifié le"
+        ])
         self.tableLieux.setRowCount(len(rows))
         for row_idx, row_data in enumerate(rows):
             for col_idx, value in enumerate(row_data):
@@ -370,10 +389,17 @@ class NominaWindow(QtWidgets.QMainWindow):
     def load_titres(self):
         """Charger les titres dans la table dédiée."""
         rows = get_all_titres()
+        self.tableTitres.setColumnCount(10)
+        self.tableTitres.setHorizontalHeaderLabels([
+            "ID", "Valeur", "Type", "Genre",
+            "Culture ID", "Culture", "Catégorie ID", "Catégorie",
+            "Créé le", "Modifié le"
+        ])
         self.tableTitres.setRowCount(len(rows))
         for row_idx, row_data in enumerate(rows):
             for col_idx, value in enumerate(row_data):
                 self.tableTitres.setItem(row_idx, col_idx, QtWidgets.QTableWidgetItem(str(value)))
+        self.tableTitres.resizeColumnsToContents()
 
     def ajouter_titre(self):
         dialog = QtWidgets.QDialog(self)
@@ -397,7 +423,29 @@ class NominaWindow(QtWidgets.QMainWindow):
         dialog.exec()
 
     def _insert_titre(self, dialog, valeur, type_field, genre, culture_id, categorie_id):
-        insert_titre(valeur, type_field, genre, culture_id, categorie_id)
+        if not str(valeur).strip():
+            QtWidgets.QMessageBox.warning(self, "Erreur", "La valeur est obligatoire.")
+            return
+        if not str(type_field).strip():
+            QtWidgets.QMessageBox.warning(self, "Erreur", "Le type est obligatoire.")
+            return
+        if not str(genre).strip():
+            QtWidgets.QMessageBox.warning(self, "Erreur", "Le genre est obligatoire.")
+            return
+
+        try:
+            # Les champs culture/catégorie sont optionnels : vide -> NULL
+            culture_id = None if str(culture_id).strip() == "" else int(str(culture_id).strip())
+            categorie_id = None if str(categorie_id).strip() == "" else int(str(categorie_id).strip())
+        except ValueError:
+            QtWidgets.QMessageBox.warning(self, "Erreur", "Culture ID / Catégorie ID doivent être des nombres (ou vides).")
+            return
+
+        result = insert_titre(valeur, type_field, genre, culture_id, categorie_id)
+        if result is None:
+            QtWidgets.QMessageBox.warning(self, "Erreur", "Insertion du titre échouée. Vérifie les IDs et la connexion DB.")
+            return
+
         self.load_titres()
         dialog.accept()
 
@@ -458,6 +506,9 @@ class NominaWindow(QtWidgets.QMainWindow):
     def load_categories(self):
         print("Charger les données pour les catégories dans la table.")
         rows = get_all_categories()
+        # Assurer la structure du tableau (sinon setItem() ne peut rien afficher)
+        self.tableCategories.setColumnCount(3)
+        self.tableCategories.setHorizontalHeaderLabels(["ID", "Nom", "Description"])
         self.tableCategories.setRowCount(len(rows)) 
         for row_idx, row_data in enumerate(rows):
             for col_idx, value in enumerate(row_data):
@@ -479,13 +530,13 @@ class NominaWindow(QtWidgets.QMainWindow):
         layout.addWidget(btn)
         dialog.exec()
 
-    def validate_and_insert_categorie(self, dialog, name_input, description_input):
-        if not name_input.text().strip():
+    def _insert_categorie(self, dialog, name, description):
+        if not str(name).strip():
             QtWidgets.QMessageBox.warning(self, "Erreur", "Le nom est obligatoire.")
             return
-        insert_categorie(name_input.text(), description_input.text())
-        dialog.accept()
+        insert_categorie(name, description)
         self.load_categories()
+        dialog.accept()
     
 
     def modifier_categorie(self):
@@ -539,6 +590,8 @@ class NominaWindow(QtWidgets.QMainWindow):
     def load_cultures(self):
         """Charger les cultures dans la table dédiée."""
         rows = get_all_cultures()
+        self.tableCultures.setColumnCount(5)
+        self.tableCultures.setHorizontalHeaderLabels(["ID", "Nom", "Description", "Créé le", "Modifié le"])
         self.tableCultures.setRowCount(len(rows))
         for row_idx, row_data in enumerate(rows):
             for col_idx, value in enumerate(row_data):
@@ -617,6 +670,10 @@ class NominaWindow(QtWidgets.QMainWindow):
     def load_users(self):
         """Charger les utilisateurs dans la table dédiée."""
         rows = get_all_users()
+        self.tableUsers.setColumnCount(7)
+        self.tableUsers.setHorizontalHeaderLabels([
+            "ID", "Nom d'utilisateur", "Email", "Rôle", "Actif", "Créé le", "Modifié le"
+        ])
         self.tableUsers.setRowCount(len(rows))
         for row_idx, row_data in enumerate(rows):
             for col_idx, value in enumerate(row_data):
@@ -712,6 +769,10 @@ class NominaWindow(QtWidgets.QMainWindow):
     def load_noms_personnages(self):
         from db import get_all_noms_personnages  # À adapter selon votre db.py
         rows = get_all_noms_personnages() if 'get_all_noms_personnages' in dir(__import__('db')) else []
+        self.tableNomsPersonnages.setColumnCount(6)
+        self.tableNomsPersonnages.setHorizontalHeaderLabels([
+            "ID", "Nom", "Catégorie ID", "Catégorie", "Créé le", "Modifié le"
+        ])
         self.tableNomsPersonnages.setRowCount(len(rows))
         for row_idx, row_data in enumerate(rows):
             for col_idx, value in enumerate(row_data):

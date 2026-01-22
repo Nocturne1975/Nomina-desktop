@@ -1,6 +1,6 @@
 import { Card } from "./ui/card";
 import { Badge } from "./ui/badge";
-import { ImageWithFallback } from "../components/nomina/ImageWithFallback";
+import { ImageWithFallback } from "./nomina/imageWithFallback";
 
 const useCases = [
   {

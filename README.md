@@ -1,9 +1,7 @@
 ﻿
-# Nomina-desktop — Application PyQt6
-Présenté par : Sonia Corbin  
-Date : 05/11/2025
+# Nomina-desktop — Electron + React (Vite)
 
-> Application desktop multiplateforme pour la génération et la narration de noms, réalisée avec Python et PyQt6.
+Application desktop basée sur **Electron** avec une UI **React/TSX** (bundlée par **Vite**).
 
 ---
 
@@ -28,45 +26,58 @@ Nomina-desktop est une application graphique permettant de générer des noms (p
 
 ## Architecture technique
 
-- **Langage** : Python 3.10+
-- **Framework GUI** : PyQt6
-- **UI** : Fichiers .ui (Qt Designer)
-- **Styles** : Qt Style Sheets (QSS) (nomina.qss)
-- **Organisation** : MVC simplifié (src/, ui/, assets/, styles/)
+- **UI** : React 18 + TypeScript (TSX)
+- **Dev server / build** : Vite
+- **Desktop shell** : Electron
+- **Styles** : Tailwind CSS (voir `web/styles/globals.css`)
 
 ---
 
 ## Installation & lancement
 
-1. Installe Python 3.10 ou plus récent.
-2. Clone le dépôt et place-toi dans le dossier :
+### Prérequis
+
+- Node.js (LTS recommandé)
+
+### Dev (UI web)
 
 ```bash
-git clone <url-du-repo>
-cd Nomina-desktop
+npm install
+npm run dev
 ```
 
-3. Installe les dépendances :
+### Dev (Electron)
+
+1) Démarrer Vite : `npm run dev`
+
+2) Dans un autre terminal :
 
 ```bash
-pip install -r requirements.txt
+npm run electron:dev
 ```
 
-4. Lance l’application :
+### Dev (1 commande)
+
+Lance Vite + Electron ensemble :
 
 ```bash
-python src/main.py
+npm run app:dev
+```
+
+### Build
+
+```bash
+npm run build
+npm run electron
 ```
 
 ---
 
 ## Structure du projet
 
-- `src/` : code source principal (main.py, logique, contrôleurs)
-- `ui/` : fichiers d’interface graphique générés avec Qt Designer (`nomina_main.ui`)
-- `styles/` : fichiers de styles (`nomina.qss`)
-- `assets/` : images, icônes, ressources graphiques
-- `requirements.txt` : dépendances Python
+- `electron/` : process principal Electron (fenêtre, chargement dev/prod)
+- `web/` : UI React (TSX)
+- `assets/` : ressources (images, icônes, etc.)
 
 ---
 

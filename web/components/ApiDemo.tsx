@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Sparkles, Copy, Check } from "lucide-react";
+import { SignedIn, SignedOut, useAuth } from "@clerk/clerk-react";
+import { apiFetch, ApiError, flushOutbox, getApiBaseUrl, getOutboxSize, setApiTokenProvider } from "../lib/api";
 
 const mockResponse = {
   character: {
@@ -20,13 +22,59 @@ const mockResponse = {
 };
 
 export function ApiDemo() {
+  const { getToken } = useAuth();
+  const [isOnline, setIsOnline] = useState<boolean>(typeof navigator === 'undefined' ? true : navigator.onLine);
+  const [outboxSize, setOutboxSize] = useState<number>(getOutboxSize());
   const [selectedType, setSelectedType] = useState<'character' | 'place' | 'object'>('character');
   const [copied, setCopied] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
 
+  const [meStatus, setMeStatus] = useState<'idle' | 'loading' | 'ok' | 'error'>('idle');
+  const [meResult, setMeResult] = useState<{ userId: string; isAdmin: boolean } | null>(null);
+  const [meError, setMeError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setApiTokenProvider(() => getToken());
+    const refresh = () => {
+      setIsOnline(navigator.onLine);
+      setOutboxSize(getOutboxSize());
+    };
+    window.addEventListener('online', refresh);
+    window.addEventListener('offline', refresh);
+    refresh();
+    return () => {
+      window.removeEventListener('online', refresh);
+      window.removeEventListener('offline', refresh);
+      setApiTokenProvider(null);
+    };
+  }, [getToken]);
+
   const handleGenerate = () => {
     setIsGenerating(true);
     setTimeout(() => setIsGenerating(false), 1000);
+  };
+
+  const handleTestMe = async () => {
+    setMeStatus('loading');
+    setMeError(null);
+    setMeResult(null);
+    try {
+      const token = await getToken();
+      const data = await apiFetch<{ userId: string; isAdmin: boolean }>(`/auth/me`, {
+        token,
+      });
+      setMeResult(data);
+      setMeStatus('ok');
+    } catch (err) {
+      const msg = err instanceof ApiError ? `${err.message} (HTTP ${err.status})` : 'Erreur inconnue';
+      setMeError(msg);
+      setMeStatus('error');
+    }
+  };
+
+  const handleSync = async () => {
+    const result = await flushOutbox();
+    setOutboxSize(result.remaining);
   };
 
   const handleCopy = () => {
@@ -93,6 +141,31 @@ export function ApiDemo() {
                 </div>
               </div>
 
+              <div className="text-sm text-[#d4c5f9] mb-4">
+                API: <span className="text-white">{getApiBaseUrl()}</span>
+              </div>
+
+              <div className="flex items-center justify-between text-sm text-[#d4c5f9] mb-4">
+                <div>
+                  Réseau:{' '}
+                  <span className={isOnline ? 'text-green-300' : 'text-yellow-300'}>
+                    {isOnline ? 'en ligne' : 'hors-ligne'}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span>Outbox: <span className="text-white">{outboxSize}</span></span>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="border-[#7b3ff2]/60 text-[#d4c5f9] hover:bg-[#7b3ff2]/15"
+                    onClick={handleSync}
+                    disabled={!isOnline || outboxSize === 0}
+                  >
+                    Synchroniser
+                  </Button>
+                </div>
+              </div>
+
               <div className="bg-[#0d0820] rounded-lg p-4 mb-4">
                 <pre className="text-sm overflow-x-auto">
                   <code className="text-[#a67be8]" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
@@ -124,6 +197,24 @@ export function ApiDemo() {
                   </>
                 )}
               </Button>
+
+              <div className="mt-3">
+                <SignedOut>
+                  <div className="text-sm text-[#d4c5f9]">
+                    Connecte-toi (bouton “Connexion” en haut) pour tester `/auth/me`.
+                  </div>
+                </SignedOut>
+                <SignedIn>
+                  <Button
+                    variant="outline"
+                    className="w-full border-[#7b3ff2]/60 text-[#d4c5f9] hover:bg-[#7b3ff2]/15"
+                    onClick={handleTestMe}
+                    disabled={meStatus === 'loading'}
+                  >
+                    Tester l'auth (`GET /auth/me`)
+                  </Button>
+                </SignedIn>
+              </div>
             </Card>
 
             {/* Response Panel */}
@@ -145,6 +236,27 @@ export function ApiDemo() {
               </div>
 
               <div className="space-y-4">
+                <div>
+                  <label className="text-sm text-[#c5bfd9] block mb-1">Statut auth</label>
+                  {meStatus === 'idle' && (
+                    <p className="text-[#2d1b4e]">Pas encore testé.</p>
+                  )}
+                  {meStatus === 'loading' && (
+                    <p className="text-[#2d1b4e]">Test en cours…</p>
+                  )}
+                  {meStatus === 'ok' && meResult && (
+                    <p className="text-[#2d1b4e]">
+                      OK — userId: <span className="font-mono">{meResult.userId}</span> — admin:{' '}
+                      <span className={meResult.isAdmin ? 'text-green-700' : 'text-[#2d1b4e]'}>
+                        {String(meResult.isAdmin)}
+                      </span>
+                    </p>
+                  )}
+                  {meStatus === 'error' && meError && (
+                    <p className="text-red-700">{meError}</p>
+                  )}
+                </div>
+
                 <div>
                   <label className="text-sm text-[#c5bfd9] block mb-1">Nom généré</label>
                   <p className="text-xl text-[#7b3ff2]" style={{ fontFamily: 'Cinzel, serif' }}>

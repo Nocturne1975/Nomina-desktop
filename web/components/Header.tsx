@@ -1,9 +1,18 @@
 import { Button } from "./ui/button";
 import { Feather, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { SignIn, SignUp, SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
 
   return (
     <header className="sticky top-0 z-50 bg-[#2d1b4e] border-b border-[#7b3ff2]/20">
@@ -37,12 +46,30 @@ export function Header() {
 
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center gap-4">
-            <Button variant="ghost" className="text-[#d4c5f9] hover:text-white hover:bg-[#7b3ff2]/20">
-              Connexion
-            </Button>
-            <Button className="bg-[#7b3ff2] hover:bg-[#a67be8] text-white">
-              Commencer
-            </Button>
+            <SignedOut>
+              <Button
+                variant="ghost"
+                className="text-[#d4c5f9] hover:text-white hover:bg-[#7b3ff2]/20"
+                onClick={() => {
+                  setAuthMode('signin');
+                  setAuthOpen(true);
+                }}
+              >
+                Connexion
+              </Button>
+              <Button
+                className="bg-[#7b3ff2] hover:bg-[#a67be8] text-white"
+                onClick={() => {
+                  setAuthMode('signup');
+                  setAuthOpen(true);
+                }}
+              >
+                Commencer
+              </Button>
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
           </div>
 
           {/* Mobile Menu Button */}
@@ -71,17 +98,54 @@ export function Header() {
                 Documentation
               </a>
               <div className="flex flex-col gap-2 pt-2">
-                <Button variant="outline" className="border-[#7b3ff2] text-[#d4c5f9]">
-                  Connexion
-                </Button>
-                <Button className="bg-[#7b3ff2] hover:bg-[#a67be8] text-white">
-                  Commencer
-                </Button>
+                <SignedOut>
+                  <Button
+                    variant="outline"
+                    className="border-[#7b3ff2] text-[#d4c5f9]"
+                    onClick={() => {
+                      setAuthMode('signin');
+                      setAuthOpen(true);
+                    }}
+                  >
+                    Connexion
+                  </Button>
+                  <Button
+                    className="bg-[#7b3ff2] hover:bg-[#a67be8] text-white"
+                    onClick={() => {
+                      setAuthMode('signup');
+                      setAuthOpen(true);
+                    }}
+                  >
+                    Commencer
+                  </Button>
+                </SignedOut>
+                <SignedIn>
+                  <div className="flex justify-center py-2">
+                    <UserButton />
+                  </div>
+                </SignedIn>
               </div>
             </nav>
           </div>
         )}
       </div>
+
+      <Dialog open={authOpen} onOpenChange={setAuthOpen}>
+        <DialogContent className="max-w-[460px] bg-[#1a0f33] border-[#7b3ff2]/30">
+          <DialogHeader>
+            <DialogTitle className="text-white">
+              {authMode === 'signin' ? 'Connexion' : 'Créer un compte'}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="mt-2">
+            {authMode === 'signin' ? (
+              <SignIn routing="hash" />
+            ) : (
+              <SignUp routing="hash" />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </header>
   );
 }

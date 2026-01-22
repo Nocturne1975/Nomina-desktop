@@ -64,6 +64,25 @@ Lance Vite + Electron ensemble :
 npm run app:dev
 ```
 
+### Online + Desktop
+
+- L'UI (Vite/React) peut tourner **en ligne** (déployée) et **en desktop** (Electron) sans changer le code.
+- Les deux pointent vers le **même backend** via `VITE_API_BASE_URL`.
+
+### Offline (cache + outbox)
+
+- Les requêtes `GET` sont **mises en cache** localement et relues si le réseau est indisponible.
+- Les mutations (`POST/PUT/PATCH/DELETE`) sont **mises en file d'attente (outbox)** hors-ligne et rejouées quand le réseau revient.
+- La démo affiche l'état réseau + la taille de l'outbox.
+
+### Variables d'environnement (Vite)
+
+Créer un fichier `.env.local` à la racine de Nomina-desktop :
+
+- `VITE_CLERK_PUBLISHABLE_KEY=pk_test_...`
+- `VITE_API_BASE_URL=https://<ton-backend-azure>.azurewebsites.net`
+```
+
 ### Build
 
 ```bash

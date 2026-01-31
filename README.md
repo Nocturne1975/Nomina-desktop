@@ -7,11 +7,18 @@ Application desktop basée sur **Electron** avec une UI **React/TSX** (bundlée 
 
 ## Table des matières
 
-- [Nomina-desktop — Application PyQt6](#nomina-desktop--application-pyqt6)
+- [Nomina-desktop — Electron + React (Vite)](#nomina-desktop--electron--react-vite)
   - [Table des matières](#table-des-matières)
   - [Présentation](#présentation)
   - [Architecture technique](#architecture-technique)
   - [Installation \& lancement](#installation--lancement)
+    - [Prérequis](#prérequis)
+    - [Dev (UI src)](#dev-ui-src)
+    - [Dev (Electron)](#dev-electron)
+    - [Dev (1 commande)](#dev-1-commande)
+    - [Online + Desktop](#online--desktop)
+    - [Offline (cache + outbox)](#offline-cache--outbox)
+    - [Variables d'environnement (Vite)](#variables-denvironnement-vite)
   - [Structure du projet](#structure-du-projet)
   - [Contribution \& contact](#contribution--contact)
   - [Licence](#licence)
@@ -29,7 +36,7 @@ Nomina-desktop est une application graphique permettant de générer des noms (p
 - **UI** : React 18 + TypeScript (TSX)
 - **Dev server / build** : Vite
 - **Desktop shell** : Electron
-- **Styles** : Tailwind CSS (voir `web/styles/globals.css`)
+- **Styles** : Tailwind CSS (voir `src/styles/globals.css`)
 
 ---
 
@@ -39,7 +46,7 @@ Nomina-desktop est une application graphique permettant de générer des noms (p
 
 - Node.js (LTS recommandé)
 
-### Dev (UI web)
+### Dev (UI src)
 
 ```bash
 npm install
@@ -80,7 +87,7 @@ npm run app:dev
 Créer un fichier `.env.local` à la racine de Nomina-desktop :
 
 - `VITE_CLERK_PUBLISHABLE_KEY=pk_test_...`
-- `VITE_API_BASE_URL=https://<ton-backend-azure>.azurewebsites.net`
+- `VITE_API_BASE_URL=https://<ton-backend-azure>.azuresrcsites.net`
 ```
 
 ### Build
@@ -95,7 +102,7 @@ npm run electron
 ## Structure du projet
 
 - `electron/` : process principal Electron (fenêtre, chargement dev/prod)
-- `web/` : UI React (TSX)
+- `src/` : UI React (TSX)
 - `assets/` : ressources (images, icônes, etc.)
 
 ---

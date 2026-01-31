@@ -4,6 +4,14 @@ export type ApiErrorPayload = {
   queued?: boolean;
 };
 
+export const getApiBaseUrl = (): string => {
+  const runtime = (globalThis as any)?.NOMINA?.apiBaseUrl as string | undefined;
+  if (runtime && runtime.trim().length > 0) return runtime.trim().replace(/\/$/, '');
+
+  const raw = import.meta.env.VITE_API_BASE_URL as string | undefined;
+  return (raw && raw.trim().length > 0 ? raw.trim() : 'http://localhost:3000').replace(/\/$/, '');
+};
+
 export class ApiError extends Error {
   status: number;
   payload?: ApiErrorPayload;
@@ -15,11 +23,6 @@ export class ApiError extends Error {
     this.payload = payload;
   }
 }
-
-export const getApiBaseUrl = (): string => {
-  const raw = import.meta.env.VITE_API_BASE_URL as string | undefined;
-  return (raw && raw.trim().length > 0 ? raw.trim() : 'http://localhost:3000').replace(/\/$/, '');
-};
 
 type TokenProvider = () => Promise<string | null>;
 

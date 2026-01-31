@@ -30,16 +30,19 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+            <a href="#/features" className="text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
               Fonctionnalités
             </a>
-            <a href="#usecases" className="text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+            <a href="#/usecases" className="text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
               Cas d'usage
             </a>
-            <a href="#pricing" className="text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+            <a href="#/pricing" className="text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
               Tarifs
             </a>
-            <a href="#docs" className="text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+            <a href="#/generate" className="text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+              Génération
+            </a>
+            <a href="#/docs" className="text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
               Documentation
             </a>
           </nav>
@@ -85,16 +88,19 @@ export function Header() {
         {mobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-[#7b3ff2]/20">
             <nav className="flex flex-col gap-4">
-              <a href="#features" className="text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+              <a href="#/features" className="text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
                 Fonctionnalités
               </a>
-              <a href="#usecases" className="text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+              <a href="#/usecases" className="text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
                 Cas d'usage
               </a>
-              <a href="#pricing" className="text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+              <a href="#/pricing" className="text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
                 Tarifs
               </a>
-              <a href="#docs" className="text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+              <a href="#/generate" className="text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+                Génération
+              </a>
+              <a href="#/docs" className="text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
                 Documentation
               </a>
               <div className="flex flex-col gap-2 pt-2">

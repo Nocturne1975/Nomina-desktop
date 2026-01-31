@@ -25,22 +25,22 @@ export function Footer() {
             <h4 className="text-white mb-4">Produit</h4>
             <ul className="space-y-2">
               <li>
-                <a href="#features" className="text-sm text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+                <a href="#/features" className="text-sm text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
                   Fonctionnalités
                 </a>
               </li>
               <li>
-                <a href="#pricing" className="text-sm text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+                <a href="#/pricing" className="text-sm text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
                   Tarifs
                 </a>
               </li>
               <li>
-                <a href="#docs" className="text-sm text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+                <a href="#/docs" className="text-sm text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
                   Documentation
                 </a>
               </li>
               <li>
-                <a href="#" className="text-sm text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+                <a href="#/changelog" className="text-sm text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
                   Changelog
                 </a>
               </li>
@@ -52,22 +52,22 @@ export function Footer() {
             <h4 className="text-white mb-4">Ressources</h4>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-sm text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+                <a href="#/blog" className="text-sm text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
                   Blog
                 </a>
               </li>
               <li>
-                <a href="#" className="text-sm text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+                <a href="#/guides" className="text-sm text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
                   Guides
                 </a>
               </li>
               <li>
-                <a href="#" className="text-sm text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+                <a href="#/community" className="text-sm text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
                   Communauté
                 </a>
               </li>
               <li>
-                <a href="#" className="text-sm text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+                <a href="#/support" className="text-sm text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
                   Support
                 </a>
               </li>
@@ -79,22 +79,22 @@ export function Footer() {
             <h4 className="text-white mb-4">Entreprise</h4>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-sm text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+                <a href="#/about" className="text-sm text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
                   À propos
                 </a>
               </li>
               <li>
-                <a href="#" className="text-sm text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+                <a href="#/careers" className="text-sm text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
                   Carrières
                 </a>
               </li>
               <li>
-                <a href="#" className="text-sm text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+                <a href="#/contact" className="text-sm text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
                   Contact
                 </a>
               </li>
               <li>
-                <a href="#" className="text-sm text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+                <a href="#/privacy" className="text-sm text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
                   Confidentialité
                 </a>
               </li>
@@ -110,13 +110,13 @@ export function Footer() {
 
           {/* Social Links */}
           <div className="flex items-center gap-4">
-            <a href="#" className="text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+            <a href="#/twitter" className="text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
               <Twitter className="w-5 h-5" />
             </a>
-            <a href="#" className="text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+            <a href="#/github" className="text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
               <Github className="w-5 h-5" />
             </a>
-            <a href="#" className="text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
+            <a href="#/linkedin" className="text-[#d4c5f9] hover:text-[#e8b4f0] transition-colors">
               <Linkedin className="w-5 h-5" />
             </a>
           </div>

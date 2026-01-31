@@ -8,3 +8,10 @@ interface ImportMetaEnv {
 interface ImportMeta {
 	readonly env: ImportMetaEnv;
 }
+
+declare global {
+  interface Window {
+    NOMINA?: { apiBaseUrl?: string };
+  }
+}
+export {};

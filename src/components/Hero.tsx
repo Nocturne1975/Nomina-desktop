@@ -8,7 +8,7 @@ export function Hero() {
   const [kind, setKind] = useState<"character" | "place" | "creature">(
     "character",
   );
-  const [genre, setGenre] = useState<"fantasy" | "scifi" | "mythic">("fantasy");
+  const [genre, setGenre] = useState<"masculin" | "feminin" | "neutre">("masculin");
   const [seed, setSeed] = useState("");
   const [withBio, setWithBio] = useState(true);
 
@@ -16,92 +16,104 @@ export function Hero() {
     null,
   );
 
-  const dictionaries = useMemo(
+    const dictionaries = useMemo(
     () => ({
       character: {
-        fantasy: {
-          first: ["Ael", "Lys", "Kael", "Mira", "Ery", "Soren"],
-          last: ["d'Or", "Nuit", "Brume", "Val", "Lune", "Cendre"],
+        masculin: {
+          first: ["Ael", "Kael", "Ery", "Soren", "Théo", "Atlas", "Orion", "Zed"],
+          last: ["d'Or", "Nuit", "Brume", "Val", "Lune", "Cendre", "Prime", "Helix"],
           bio: [
             "un voyageur discret au passé trouble",
-            "une archiviste fascinée par les noms anciens",
             "un duelliste réputé dans les ruelles de la cité",
-          ],
-        },
-        scifi: {
-          first: ["Nova", "Kai", "Zed", "Aria", "Orion", "Vex"],
-          last: ["-7", "Prime", "Kappa", "Helix", "Sable", "Vector"],
-          bio: [
-            "un pilote de cargo qui ne fait confiance qu’à ses capteurs",
-            "une analyste de données qui parle en probabilités",
+            "un pilote de cargo qui ne fait confiance qu'à ses capteurs",
             "un ingénieur qui répare tout, sauf ses regrets",
+            "un messager au service d'un pacte oublié",
+            "un gardien lié à une étoile mourante",
           ],
         },
-        mythic: {
-          first: ["Théo", "Iris", "Nyx", "Astra", "Eos", "Atlas"],
-          last: ["d'Éther", "des Vents", "du Serment", "des Oracles", "d'Aube"],
+        feminin: {
+          first: ["Lys", "Mira", "Nova", "Aria", "Iris", "Astra", "Eos"],
+          last: ["d'Or", "Nuit", "Brume", "Val", "Lune", "Cendre", "-7", "Kappa", "Sable"],
           bio: [
-            "un messager au service d’un pacte oublié",
+            "une archiviste fascinée par les noms anciens",
+            "une analyste de données qui parle en probabilités",
             "une prêtresse qui lit les signes dans la fumée",
-            "un gardien lié à une étoile mourante",
+            "une pilote renommée aux mille trajets",
+            "une guerrière silencieuse aux cicatrices éloquentes",
+          ],
+        },
+        neutre: {
+          first: ["Vex", "Kai", "Nyx", "Ash", "Lux", "Sol", "Echo"],
+          last: ["Vector", "d'Éther", "des Vents", "du Serment", "des Oracles", "-noir"],
+          bio: [
+            "un être mystérieux qui ne parle qu'en énigmes",
+            "une entité liée aux anciennes prophéties",
+            "un gardien des frontières entre les mondes",
+            "une conscience artificielle en quête d'humanité",
           ],
         },
       },
       place: {
-        fantasy: {
-          first: ["Val", "Mont", "Brise", "Roc", "Sombre", "Aube"],
-          last: ["-clair", "-noir", "-d'Azur", "-des-Épines", "-sur-Lune"],
-          bio: [
-            "un hameau perché où le vent raconte des légendes",
-            "une cité portuaire aux lanternes éternelles",
-            "des ruines dont les murs chuchotent des noms",
-          ],
-        },
-        scifi: {
-          first: ["Station", "Dôme", "Nexus", "Colonie", "Port"],
-          last: ["Epsilon", "Delta", "Oméga", "Astra", "Kepler"],
+        masculin: {
+          first: ["Mont", "Roc", "Port", "Dôme", "Nexus", "Sanctuaire", "Temple"],
+          last: ["-noir", "-clair", "Epsilon", "Delta", "Oméga", "des-Échos"],
           bio: [
             "un avant-poste minier au bord de la ceinture",
             "un hub commercial où chaque porte a un prix",
-            "une base de recherche sous surveillance constante",
+            "un lieu sacré qui change avec la lune",
+            "un hameau perché où le vent raconte des légendes",
           ],
         },
-        mythic: {
-          first: ["Sanctuaire", "Temple", "Grotte", "Île", "Forêt"],
-          last: ["des-Échos", "des-Serments", "du-Zéphyr", "des-Miroirs"],
+        feminin: {
+          first: ["Val", "Brise", "Aube", "Station", "Colonie", "Grotte", "Île", "Forêt"],
+          last: ["-claire", "-d'Azur", "-des-Épines", "-sur-Lune", "Astra", "Kepler", "des-Miroirs"],
           bio: [
-            "un lieu sacré qui change avec la lune",
+            "une cité portuaire aux lanternes éternelles",
+            "une base de recherche sous surveillance constante",
+            "une oasis cachée dans les dunes temporelles",
+            "une vallée où les échos durent des années",
+          ],
+        },
+        neutre: {
+          first: ["Sombre", "Nexus", "Echo", "Horizon", "Portail"],
+          last: ["-noir", "-d'Ombre", "Prime", "des-Serments", "du-Zéphyr"],
+          bio: [
+            "des ruines dont les murs chuchotent des noms",
             "un passage caché entre deux mythes",
-            "un domaine interdit où l’on perd son nom",
+            "un domaine interdit où l'on perd son nom",
+            "un lieu hors du temps où tout recommence",
           ],
         },
       },
       creature: {
-        fantasy: {
-          first: ["Grif", "Syl", "Drak", "Umbra", "Fae", "Morn"],
-          last: ["-aile", "-crocs", "-brume", "-écaille", "-ombre"],
+        masculin: {
+          first: ["Grif", "Drak", "Xeno", "Proto", "Serp", "Atlas"],
+          last: ["-aile", "-crocs", "-écaille", "drone", "organisme", "-bère"],
+          bio: [
+            "un prédateur silencieux aux yeux d'ambre",
+            "un gardien des clairières interdites",
+            "un organisme adaptatif qui apprend en observant",
+            "un esprit qui protège les noms vrais",
+          ],
+        },
+        feminin: {
+          first: ["Syl", "Umbra", "Fae", "Bio", "Harp", "Chim", "Ném"],
+          last: ["-brume", "-ombre", "forme", "spectre", "-ère", "-entine", "-ésis"],
           bio: [
             "une créature nocturne attirée par les promesses",
-            "un gardien des clairières interdites",
-            "un prédateur silencieux aux yeux d’ambre",
-          ],
-        },
-        scifi: {
-          first: ["Xeno", "Bio", "Cryo", "Nano", "Proto"],
-          last: ["forme", "drone", "hôte", "spectre", "organisme"],
-          bio: [
-            "un organisme adaptatif qui apprend en observant",
             "une entité qui perturbe les communications",
-            "un échantillon échappé d’un labo clandestin",
+            "une bête liée à un ancien interdit",
+            "une gardienne des seuils oubliés",
           ],
         },
-        mythic: {
-          first: ["Chim", "Serp", "Harp", "Cér", "Ném"],
-          last: ["-ère", "-entine", "-ie", "-bère", "-ésis"],
+        neutre: {
+          first: ["Morn", "Cryo", "Nano", "Cér", "Echo", "Void"],
+          last: ["-spectre", "hôte", "-ie", "-forme", "Prime"],
           bio: [
-            "une bête liée à un ancien interdit",
-            "un esprit qui protège les noms vrais",
-            "un symbole vivant d’un destin brisé",
+            "un échantillon échappé d'un labo clandestin",
+            "un symbole vivant d'un destin brisé",
+            "une anomalie qui défie toute classification",
+            "une présence qui observe sans juger",
           ],
         },
       },
@@ -155,8 +167,8 @@ export function Hero() {
               Commencer gratuitement
               <ArrowRight className="w-5 h-5" />
             </Button>
-            <Button size="lg" variant="outline" className="border-[#7b3ff2] text-[#d4c5f9] hover:bg-[#7b3ff2]/20">
-              Voir la documentation
+            <Button asChild size="lg" variant="outline" className="border-[#7b3ff2] text-[#d4c5f9] hover:bg-[#7b3ff2]/20">
+              <a href="#/docs">Voir la documentation</a>
             </Button>
           </div>
 
@@ -192,9 +204,9 @@ export function Hero() {
                     onChange={(e) => setGenre(e.target.value as typeof genre)}
                     className="mt-2 w-full h-9 rounded-md border border-[#d4c5f9] bg-white px-3 text-sm"
                   >
-                    <option value="fantasy">Fantasy</option>
-                    <option value="scifi">Sci‑Fi</option>
-                    <option value="mythic">Mythique</option>
+                    <option value="masculin">Masculin</option>
+                    <option value="feminin">Féminin</option>
+                    <option value="neutre">Neutre</option>
                   </select>
                 </div>
 

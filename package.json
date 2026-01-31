@@ -10,12 +10,17 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:web": "vite build --mode web",
+    "build:src": "vite build --mode src",
     "build:electron": "vite build --mode electron",
     "preview": "vite preview",
     "electron": "electron .",
     "electron:dev": "powershell -NoProfile -Command \"$env:VITE_DEV_SERVER_URL='http://localhost:5173'; electron .\"",
-    "app:dev": "concurrently -k -n VITE,ELECTRON -c blue,magenta \"npm:dev\" \"npm:electron:dev\""
+    "app:dev": "concurrently -k -n VITE,ELECTRON -c blue,magenta \"npm:dev\" \"npm:electron:dev\"",
+    "migrate": "node -e \"console.error('Les migrations Prisma se font dans Nomina-backend. Utilise: npm run backend:migrate'); process.exit(1)\"",
+    "seed": "node -e \"console.error('Le seed se fait dans Nomina-backend. Utilise: npm run backend:seed'); process.exit(1)\"",
+    "backend:migrate": "npm --prefix ../Nomina-backend run migrate",
+    "backend:migrate:deploy": "npm --prefix ../Nomina-backend run migrate:deploy",
+    "backend:seed": "npm --prefix ../Nomina-backend run seed"
   },
   "repository": {
     "type": "git",
@@ -70,6 +75,7 @@
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.55.0",
     "react-resizable-panels": "^2.1.7",
+    "react-router-dom": "^7.13.0",
     "recharts": "^2.15.2",
     "sonner": "^2.0.3",
     "tailwind-merge": "*",
